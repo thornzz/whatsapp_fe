@@ -47,13 +47,13 @@ function ChatHeader({ online, callUser, socket }) {
                   )}
             </h1>
             <span className="text-xs dark:text-dark_svg_2">
-              {online ? "online" : ""}
+              {online ? "Çevrimiçi" : ""}
             </span>
           </div>
         </div>
         {/*Right*/}
         <ul className="flex items-center gap-x-2.5">
-          {1 == 1 ? (
+          {/* {1 == 1 ? (
             <li onClick={() => callUser()}>
               <button className="btn">
                 <VideoCallIcon />
@@ -66,7 +66,7 @@ function ChatHeader({ online, callUser, socket }) {
                 <CallIcon />
               </button>
             </li>
-          ) : null}
+          ) : null} */}
           <li>
             <button className="btn">
               <SearchLargeIcon className="dark:fill-dark_svg_1" />

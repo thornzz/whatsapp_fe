@@ -14,21 +14,21 @@ export const dateHandler = (date) => {
     }
   };
   if (time === "a few seconds") {
-    return "Now";
+    return "Şimdi";
   }
   if (time.search("minute") !== -1) {
     let mins = time.split(" ")[0];
     if (mins === "a") {
-      return "1 min";
+      return "1 dakika önce";
     } else {
-      return `${mins} min`;
+      return `${mins} dakika önce`;
     }
   }
   if (time.search("hour") !== -1) {
     return dateByHourAndMin;
   }
   if (time === "a day") {
-    return "Yesterday";
+    return "Dün";
   }
   if (time.search("days") !== -1) {
     return getDay();

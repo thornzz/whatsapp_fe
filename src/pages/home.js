@@ -49,100 +49,100 @@ function Home({ socket }) {
   }, [user]);
 
   //call
-  useEffect(() => {
-    setupMedia();
-    socket.on("setup socket", (id) => {
-      setCall({ ...call, socketId: id });
-    });
-    socket.on("call user", (data) => {
-      setCall({
-        ...call,
-        socketId: data.from,
-        name: data.name,
-        picture: data.picture,
-        signal: data.signal,
-        receiveingCall: true,
-      });
-    });
-    socket.on("end call", () => {
-      setShow(false);
-      setCall({ ...call, callEnded: true, receiveingCall: false });
-      myVideo.current.srcObject = null;
-      if (callAccepted) {
-        connectionRef?.current?.destroy();
-      }
-    });
-  }, []);
-  //--call user funcion
-  const callUser = () => {
-    enableMedia();
-    setCall({
-      ...call,
-      name: getConversationName(user, activeConversation.users),
-      picture: getConversationPicture(user, activeConversation.users),
-    });
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream,
-    });
-    peer.on("signal", (data) => {
-      socket.emit("call user", {
-        userToCall: getConversationId(user, activeConversation.users),
-        signal: data,
-        from: socketId,
-        name: user.name,
-        picture: user.picture,
-      });
-    });
-    peer.on("stream", (stream) => {
-      userVideo.current.srcObject = stream;
-    });
-    socket.on("call accepted", (signal) => {
-      setCallAccepted(true);
-      peer.signal(signal);
-    });
-    connectionRef.current = peer;
-  };
-  //--answer call  funcion
-  const answerCall = () => {
-    enableMedia();
-    setCallAccepted(true);
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
-    });
-    peer.on("signal", (data) => {
-      socket.emit("answer call", { signal: data, to: call.socketId });
-    });
-    peer.on("stream", (stream) => {
-      userVideo.current.srcObject = stream;
-    });
-    peer.signal(call.signal);
-    connectionRef.current = peer;
-  };
-  //--end call  funcion
-  const endCall = () => {
-    setShow(false);
-    setCall({ ...call, callEnded: true, receiveingCall: false });
-    myVideo.current.srcObject = null;
-    socket.emit("end call", call.socketId);
-    connectionRef?.current?.destroy();
-  };
-  //--------------------------
-  const setupMedia = () => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setStream(stream);
-      });
-  };
+  // useEffect(() => {
+  //  setupMedia();
+  //   socket.on("setup socket", (id) => {
+  //     setCall({ ...call, socketId: id });
+  //   });
+  //   socket.on("call user", (data) => {
+  //     setCall({
+  //       ...call,
+  //       socketId: data.from,
+  //       name: data.name,
+  //       picture: data.picture,
+  //       signal: data.signal,
+  //       receiveingCall: true,
+  //     });
+  //   });
+  //   socket.on("end call", () => {
+  //     setShow(false);
+  //     setCall({ ...call, callEnded: true, receiveingCall: false });
+  //     myVideo.current.srcObject = null;
+  //     if (callAccepted) {
+  //       connectionRef?.current?.destroy();
+  //     }
+  //   });
+  // }, []);
+  // //--call user funcion
+  // const callUser = () => {
+  //   enableMedia();
+  //   setCall({
+  //     ...call,
+  //     name: getConversationName(user, activeConversation.users),
+  //     picture: getConversationPicture(user, activeConversation.users),
+  //   });
+  //   const peer = new Peer({
+  //     initiator: true,
+  //     trickle: false,
+  //     stream: stream,
+  //   });
+  //   peer.on("signal", (data) => {
+  //     socket.emit("call user", {
+  //       userToCall: getConversationId(user, activeConversation.users),
+  //       signal: data,
+  //       from: socketId,
+  //       name: user.name,
+  //       picture: user.picture,
+  //     });
+  //   });
+  //   peer.on("stream", (stream) => {
+  //     userVideo.current.srcObject = stream;
+  //   });
+  //   socket.on("call accepted", (signal) => {
+  //     setCallAccepted(true);
+  //     peer.signal(signal);
+  //   });
+  //   connectionRef.current = peer;
+  // };
+  // //--answer call  funcion
+  // const answerCall = () => {
+  //   enableMedia();
+  //   setCallAccepted(true);
+  //   const peer = new Peer({
+  //     initiator: false,
+  //     trickle: false,
+  //     stream: stream,
+  //   });
+  //   peer.on("signal", (data) => {
+  //     socket.emit("answer call", { signal: data, to: call.socketId });
+  //   });
+  //   peer.on("stream", (stream) => {
+  //     userVideo.current.srcObject = stream;
+  //   });
+  //   peer.signal(call.signal);
+  //   connectionRef.current = peer;
+  // };
+  // //--end call  funcion
+  // const endCall = () => {
+  //   setShow(false);
+  //   setCall({ ...call, callEnded: true, receiveingCall: false });
+  //   myVideo.current.srcObject = null;
+  //   socket.emit("end call", call.socketId);
+  //   connectionRef?.current?.destroy();
+  // };
+  // //--------------------------
+  // const setupMedia = () => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true, audio: true })
+  //     .then((stream) => {
+  //       setStream(stream);
+  //     });
+  // };
 
-  const enableMedia = () => {
-    myVideo.current.srcObject = stream;
-    setShow(true);
-  };
+  // const enableMedia = () => {
+  //   myVideo.current.srcObject = stream;
+  //   setShow(true);
+  // };
   //get Conversations
   useEffect(() => {
     if (user?.token) {
@@ -168,7 +168,7 @@ function Home({ socket }) {
           {activeConversation._id ? (
             <ChatContainer
               onlineUsers={onlineUsers}
-              callUser={callUser}
+              // callUser={callUser}
               typing={typing}
             />
           ) : (
@@ -179,7 +179,7 @@ function Home({ socket }) {
       {/*Call*/}
 
       <div className={(show || call.signal) && !call.callEnded ? "" : "hidden"}>
-        <Call
+        {/* <Call
           call={call}
           setCall={setCall}
           callAccepted={callAccepted}
@@ -191,7 +191,7 @@ function Home({ socket }) {
           endCall={endCall}
           totalSecInCall={totalSecInCall}
           setTotalSecInCall={setTotalSecInCall}
-        />
+        /> */}
       </div>
     </>
   );
