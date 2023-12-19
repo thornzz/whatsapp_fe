@@ -44,6 +44,7 @@ function Home({ socket }) {
     socket.emit("join", user._id);
     //get online users
     socket.on("get-online-users", (users) => {
+      console.log(users)
       setOnlineUsers(users);
     });
   }, [user]);
