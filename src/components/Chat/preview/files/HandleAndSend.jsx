@@ -62,7 +62,7 @@ function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
               <VideoThumbnail videoUrl={file.fileData} />
             ) : (
               <img
-                src={`../../../../images/file/${file.type}.png`}
+                src={require(`../../../../images/file/${file.type}.png`)}
                 alt=""
                 className="w-8 h-10 mt-1.5 ml-2.5"
               />
