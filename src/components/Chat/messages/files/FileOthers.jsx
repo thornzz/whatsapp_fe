@@ -7,7 +7,7 @@ export default function FileOthers({ file, type, me }) {
         {/*File infos*/}
         <div className="flex items-center gap-2">
           <img
-            src={`../../../../images/file/${type}.png`}
+            src={require(`../../../../images/file/${type}.png`)}
             alt=""
             className="w-8 object-contain"
           />
@@ -15,9 +15,7 @@ export default function FileOthers({ file, type, me }) {
             <h1>
               {file.original_filename}.{file.public_id.split(".")[1]}
             </h1>
-            <span className="text-sm">
-              {type} . {file.bytes}B
-            </span>
+           
           </div>
         </div>
         {/*Download button*/}

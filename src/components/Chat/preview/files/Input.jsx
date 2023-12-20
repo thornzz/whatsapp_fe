@@ -4,7 +4,7 @@ export default function Input({ message, setMessage }) {
       {/*Message input*/}
       <input
         type="text"
-        placeholder="Type a message"
+        placeholder="Mesajınızı girin"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         className="w-full bg-transparent h-11 pl-2 focus:outline-none border-none dark:text-dark_text_1"

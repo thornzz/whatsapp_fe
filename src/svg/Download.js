@@ -4,6 +4,7 @@ export default function DownloadIcon({ className }) {
       viewBox="0 0 34 34"
       height={34}
       width={34}
+      className={className}
       preserveAspectRatio="xMidYMid meet"
       version="1.1"
       x="0px"

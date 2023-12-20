@@ -12,8 +12,10 @@ export default function MultipleSelect({
         options={searchResults}
         onChange={setSelectedUsers}
         onKeyDown={(e) => handleSearch(e)}
-        placeholder="Search, select users"
+        placeholder="Kullanıcıları seçin..."
         isMulti
+        loadingMessage={()=>"Yükleniyor"}
+        noOptionsMessage={()=>"Başka kullanıcı bulunamadı..."}
         formatOptionLabel={(user) => (
           <div className="flex items-center gap-1">
             <img
@@ -21,7 +23,7 @@ export default function MultipleSelect({
               alt=""
               className="w-8 h-8 object-cover rounded-full"
             />
-            <span className="text-[#222]">{user.label}</span>
+            <span className="text-[#1a1818]">{user.label}</span>
           </div>
         )}
         styles={{
@@ -30,7 +32,12 @@ export default function MultipleSelect({
             border: "none",
             borderColor: "transparent",
             background: "transparent",
+
           }),
+          input: base => ({
+            ...base,
+            color: "#fff"
+          })
         }}
       />
     </div>
