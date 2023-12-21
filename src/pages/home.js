@@ -155,6 +155,11 @@ function Home({ socket }) {
     socket.on("receive message", (message) => {
       dispatch(updateMessagesAndConversations(message));
     });
+    socket.on("group created", () => {
+      if (user?.token) {
+        dispatch(getConversations(user.token));
+      }
+    });
     //listening when a user is typing
     socket.on("typing", (conversation) => setTyping(conversation));
     socket.on("stop typing", () => setTyping(false));

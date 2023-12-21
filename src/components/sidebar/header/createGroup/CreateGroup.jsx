@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { createGroupConversation } from "../../../../features/chatSlice";
-export default function CreateGroup({ setShowCreateGroup }) {
+import SocketContext from "../../../../context/SocketContext.js";
+
+function CreateGroup({ setShowCreateGroup,socket }) {
+  
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { status } = useSelector((state) => state.chat);
@@ -58,6 +61,8 @@ export default function CreateGroup({ setShowCreateGroup }) {
         token: user.token,
       };
       let newConvo = await dispatch(createGroupConversation(values));
+      //send new group notify to server
+      socket.emit("new group notify");
       setShowCreateGroup(false);
     }
   };
@@ -98,3 +103,10 @@ export default function CreateGroup({ setShowCreateGroup }) {
     </div>
   );
 }
+
+const CreateGroupWithSocket = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <CreateGroup {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+export default CreateGroupWithSocket;

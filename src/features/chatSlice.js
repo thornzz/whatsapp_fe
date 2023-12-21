@@ -24,6 +24,8 @@ export const getConversations = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(data,'get conversations');
+      
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -119,6 +121,9 @@ export const chatSlice = createSlice({
       state.activeConversation = action.payload;
     },
     updateMessagesAndConversations: (state, action) => {
+      
+      console.log('yeni mesaj geldi',state.messages);
+
       //update messages
       let convo = state.activeConversation;
       if (convo._id === action.payload.conversation._id) {
