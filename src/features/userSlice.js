@@ -13,6 +13,7 @@ const initialState = {
     picture: "",
     status: "",
     token: "",
+    phonenumber:""
   },
 };
 
@@ -58,6 +59,7 @@ export const userSlice = createSlice({
         picture: "",
         status: "",
         token: "",
+        phonenumber:""
       };
     },
     changeStatus: (state, action) => {

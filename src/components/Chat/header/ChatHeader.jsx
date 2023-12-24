@@ -11,6 +11,7 @@ import SocketContext from "../../../context/SocketContext";
 import Peer from "simple-peer";
 import {
   getConversationName,
+  getConversationNamePhoneNumber,
   getConversationPicture,
 } from "../../../utils/chat";
 function ChatHeader({ online, callUser, socket }) {
@@ -38,13 +39,14 @@ function ChatHeader({ online, callUser, socket }) {
           {/*Conversation name and online status*/}
           <div className="flex flex-col">
             <h1 className="dark:text-white text-md font-bold">
-              {activeConversation.isGroup
+              {/* {activeConversation.isGroup
                 ? activeConversation.name
                 : capitalize(
                     getConversationName(user, activeConversation.users).split(
                       " "
                     )[0]
-                  )}
+                  )} */}
+                 {  getConversationNamePhoneNumber(user, activeConversation.users)}
             </h1>
             <span className="text-xs dark:text-dark_svg_2">
               {online ? "Çevrimiçi" : ""}

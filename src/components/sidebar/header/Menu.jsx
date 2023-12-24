@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
 import { logout } from "../../../features/userSlice";
 import { useState } from "react";
+import SocketContext from "../../../context/SocketContext";
 
-export default function Menu({ setShowCreateGroup }) {
+function Menu({ setShowCreateGroup, socket }) {
   const dispatch = useDispatch();
   return (
     <>
@@ -14,13 +15,16 @@ export default function Menu({ setShowCreateGroup }) {
           >
             <span>Yeni grup sohbeti</span>
           </li>
-        
+
           <li className="py-3 pl-5 cursor-pointer hover:bg-dark_bg_3">
             <span>Ayarlar</span>
           </li>
           <li
             className="py-3 pl-5 cursor-pointer hover:bg-dark_bg_3"
-            onClick={() => dispatch(logout())}
+            onClick={() => {
+             // socket.disconnect();
+              dispatch(logout());
+            }}
           >
             <span>Çıkış yap</span>
           </li>
@@ -29,3 +33,10 @@ export default function Menu({ setShowCreateGroup }) {
     </>
   );
 }
+const MenuWithContext = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Menu {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+
+export default MenuWithContext;

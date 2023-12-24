@@ -24,8 +24,6 @@ export const getConversations = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data,'get conversations');
-      
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -35,12 +33,12 @@ export const getConversations = createAsyncThunk(
 export const open_create_conversation = createAsyncThunk(
   "conervsation/open_create",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id, isGroup } = values;
+    const { token, receiver_id, isGroup,waba_user_id } = values;
     try {
-      console.log(values);
+      console.log(values)
       const { data } = await axios.post(
         CONVERSATION_ENDPOINT,
-        { receiver_id, isGroup },
+        { receiver_id, isGroup,waba_user_id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -72,7 +70,9 @@ export const getConversationMessages = createAsyncThunk(
 export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
-    const { token, message, convo_id, files } = values;
+    console.log("send msg tetiklendi", values);
+    const { token, message, convo_id, files, waba_user_phonenumber } = values;
+
     try {
       const { data } = await axios.post(
         MESSAGE_ENDPOINT,
@@ -80,6 +80,7 @@ export const sendMessage = createAsyncThunk(
           message,
           convo_id,
           files,
+          waba_user_phonenumber,
         },
         {
           headers: {
@@ -87,6 +88,7 @@ export const sendMessage = createAsyncThunk(
           },
         }
       );
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -121,15 +123,20 @@ export const chatSlice = createSlice({
       state.activeConversation = action.payload;
     },
     updateMessagesAndConversations: (state, action) => {
-      
-      console.log('yeni mesaj geldi',state.messages);
-
-      //update messages
+      // Update messages
       let convo = state.activeConversation;
       if (convo._id === action.payload.conversation._id) {
-        state.messages = [...state.messages, action.payload];
+        // Check if the message with the same ID already exists
+        const existingMessage = state.messages.find(
+          (msg) => msg._id === action.payload._id
+        );
+    
+        if (!existingMessage) {
+          state.messages = [...state.messages, action.payload];
+        }
       }
-      //update conversations
+    
+      // Update conversations
       let conversation = {
         ...action.payload.conversation,
         latestMessage: action.payload,
@@ -139,6 +146,31 @@ export const chatSlice = createSlice({
       );
       newConvos.unshift(conversation);
       state.conversations = newConvos;
+    },
+  
+    updateStatues: (state, action) => {
+      // Update statues of messages
+      const { _id, status, conversation } = action.payload;
+
+      // Check if the active conversation matches the updated message's conversation
+      if (state.activeConversation?._id === conversation._id) {
+        // Find the index of the message to update based on its _id
+        const messageIndex = state.messages.findIndex(
+          (message) => message._id === _id
+        );
+
+        // If the message is found, update its status
+        if (messageIndex !== -1) {
+          const updatedMessages = [...state.messages];
+          updatedMessages[messageIndex] = {
+            ...updatedMessages[messageIndex],
+            status: status,
+          };
+
+          // Update the state with the modified messages array
+          state.messages = updatedMessages;
+        }
+      }
     },
     addFiles: (state, action) => {
       state.files = [...state.files, action.payload];
@@ -215,6 +247,7 @@ export const chatSlice = createSlice({
 export const {
   setActiveConversation,
   updateMessagesAndConversations,
+  updateStatues,
   addFiles,
   clearFiles,
   removeFileFromFiles,

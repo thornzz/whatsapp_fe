@@ -28,26 +28,26 @@ export default function ChatMessages({ typing }) {
         {messages &&
           messages.map((message) => (
             <React.Fragment key={message._id}>
-              {/*Message files */}
-              {message.files.length > 0
-                ? message.files.map((file, index) => (
-                    <FileMessage
-                      FileMessage={file}
-                      message={message}
-                      key={`${message._id}_file_${index}`}
-                      me={user._id === message.sender._id}
-                    />
-                  ))
-                : null}
-              {/*Message text*/}
-              {message.message.length > 0 ? (
-                <Message
-                  message={message}
-                  key={`${message._id}_text`}
-                  me={user._id === message.sender._id}
-                />
-              ) : null}
-            </React.Fragment>
+            {/* Message files */}
+            {message.files.length > 0
+              ? message.files.map((file, index) => (
+                  <FileMessage
+                    FileMessage={file}
+                    message={message}
+                    key={`${message._id}_file_${index}`}
+                    me={user._id === message.sender._id}
+                  />
+                ))
+              : null}
+            {/* Message text */}
+            {message.message.length > 0 ? (
+              <Message
+                message={message}
+                key={`${message._id}_text`}
+                me={user._id === message.sender._id}
+              />
+            ) : null}
+          </React.Fragment>
           ))}
         {typing === activeConversation._id ? <Typing key="typing" /> : null}
         <div className="mt-2" ref={endRef}></div>

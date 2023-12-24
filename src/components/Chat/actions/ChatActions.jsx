@@ -18,6 +18,7 @@ function ChatActions({ socket }) {
   const [message, setMessage] = useState("");
   const textRef = useRef();
   const values = {
+    waba_user_phonenumber:activeConversation?.users[0]?.phonenumber,
     message,
     convo_id: activeConversation._id,
     files: [],
@@ -25,9 +26,10 @@ function ChatActions({ socket }) {
   };
   const SendMessageHandler = async (e) => {
     e.preventDefault();
+    console.log(activeConversation.users);
     setLoading(true);
     let newMsg = await dispatch(sendMessage(values));
-    socket.emit("send message", newMsg.payload);
+    //socket.emit("send message", newMsg.payload);
     setMessage("");
     setLoading(false);
   };

@@ -16,7 +16,7 @@ export default function Conversations({ onlineUsers, typing }) {
               (c) =>
                 c.latestMessage ||
                 c._id === activeConversation._id ||
-                c.isGroup == true
+                c.isGroup === true
             )
             .map((convo) => {
               let check = checkOnlineStatus(onlineUsers, user, convo.users);
