@@ -17,17 +17,18 @@ function Home({ socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  
-
   //typing
  // const [typing, setTyping] = useState(false);
   //join user into the socket io
   useEffect(() => {
+    if(!socket.connected)
+    socket.connect();
     socket.emit("join", user._id);
     //get online users
     socket.on("get-online-users", (users) => {
       setOnlineUsers(users);
     });
+   
   }, []);
 
   //get Conversations
@@ -38,9 +39,11 @@ function Home({ socket }) {
   }, []);
 
   useEffect(() => {
+    if(!socket.connected)
+    socket.connect();
     //lsitening to receiving a message
     socket.on("receive message", (message,userId) => {
-    //  console.log(user._id,'user idm')
+      //console.log(message);
      dispatch(updateMessagesAndConversations(message));
     });
     socket.on("update statues", (message) => {
@@ -66,6 +69,9 @@ function Home({ socket }) {
       //console.log('incoming-waba-status tetiklendi',message);
      socket.emit('incoming-waba-statues-server',{message,userId:user._id});
      });
+     return ()=>{
+      socket.disconnect();
+    }
   }, []);
 
   return (

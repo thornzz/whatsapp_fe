@@ -29,7 +29,7 @@ function ChatActions({ socket }) {
     console.log(activeConversation.users);
     setLoading(true);
     let newMsg = await dispatch(sendMessage(values));
-    //socket.emit("send message", newMsg.payload);
+    socket.emit("send message", newMsg.payload);
     setMessage("");
     setLoading(false);
   };
