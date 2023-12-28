@@ -18,17 +18,23 @@ function Home({ socket }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   //typing
- // const [typing, setTyping] = useState(false);
+  // const [typing, setTyping] = useState(false);
   //join user into the socket io
+
   useEffect(() => {
-    if(!socket.connected)
-    socket.connect();
-    socket.emit("join", user._id);
     //get online users
     socket.on("get-online-users", (users) => {
+      console.log(users, "get online users");
       setOnlineUsers(users);
     });
-   
+  }, []);
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+    socket.emit("join", user._id);
+    socket.on("connect", () => {
+      console.log("tekrar bağlandık");
+      socket.emit("join", user._id);
+    });
   }, []);
 
   //get Conversations
@@ -39,16 +45,14 @@ function Home({ socket }) {
   }, []);
 
   useEffect(() => {
-    if(!socket.connected)
-    socket.connect();
     //lsitening to receiving a message
-    socket.on("receive message", (message,userId) => {
+    socket.on("receive message", (message, userId) => {
       //console.log(message);
-     dispatch(updateMessagesAndConversations(message));
+      dispatch(updateMessagesAndConversations(message));
     });
     socket.on("update statues", (message) => {
       //console.log('receive message tetiklendi',message);
-     dispatch(updateStatues(message));
+      dispatch(updateStatues(message));
     });
     socket.on("group created", () => {
       if (user?.token) {
@@ -60,18 +64,22 @@ function Home({ socket }) {
     // socket.on("stop typing", () => setTyping(false));
 
     //incoming waba message
-    socket.on("incoming-waba-message", async ({message}) => {
-     console.log('incoming-waba-msg tetiklendi');
-    socket.emit('incoming-waba-message-server',{message,userId:user._id});
+    socket.on("incoming-waba-message", async ({ message }) => {
+      console.log("incoming-waba-msg tetiklendi");
+      console.log(message);
+      socket.emit("incoming-waba-message-server", {
+        message,
+        userId: user._id,
+      });
     });
     //incoming waba message
-    socket.on("incoming-waba-status", async ({message}) => {
+    socket.on("incoming-waba-status", async ({ message }) => {
       //console.log('incoming-waba-status tetiklendi',message);
-     socket.emit('incoming-waba-statues-server',{message,userId:user._id});
-     });
-     return ()=>{
-      socket.disconnect();
-    }
+      socket.emit("incoming-waba-statues-server", {
+        message,
+        userId: user._id,
+      });
+    });
   }, []);
 
   return (
@@ -86,19 +94,17 @@ function Home({ socket }) {
             <ChatContainer
               onlineUsers={onlineUsers}
               // callUser={callUser}
-             
             />
+          ) : (
             //  <ChatContainer
             //   onlineUsers={onlineUsers}
             //   // callUser={callUser}
             //   typing={typing}
             // />
-          ) : (
             <WhatsappHome />
           )}
         </div>
       </div>
-   
     </>
   );
 }

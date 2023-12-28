@@ -39,7 +39,9 @@ function ChatActions({ socket }) {
       className="dark:bg-dark_bg_2 h-[60px] w-full flex items-center absolute bottom-0 py-2 px-4 select-none"
     >
       {/*Container*/}
-      <div className="w-full flex items-center gap-x-2">
+      <div className={`w-full flex items-center gap-x-2 
+     ${activeConversation.closed? "hidden" : ""}
+     `}>
         {/*Emojis and attachpments*/}
         <ul className="flex gap-x-2">
           <EmojiPickerApp
@@ -66,6 +68,9 @@ function ChatActions({ socket }) {
             <SendIcon className="dark:fill-dark_svg_1" />
           )}
         </button>
+      </div>
+      <div className={`w-full flex items-center gap-x-2 justify-center  ${!activeConversation?.closed? "hidden" : ""}`}>
+        <p className="text-amber-50">SOHBET SONLANDIRILDI</p>
       </div>
     </form>
   );

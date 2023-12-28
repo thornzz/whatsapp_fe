@@ -3,9 +3,11 @@ import { checkOnlineStatus, getConversationId } from "../../../utils/chat";
 import Conversation from "./Conversation";
 
 export default function Conversations({ onlineUsers, typing }) {
+  
   const { conversations, activeConversation } = useSelector(
     (state) => state.chat
   );
+  console.log(conversations,'Conversations, satır 10')
   const { user } = useSelector((state) => state.user);
   return (
     <div className="convos scrollbar">
@@ -19,12 +21,12 @@ export default function Conversations({ onlineUsers, typing }) {
                 c.isGroup === true
             )
             .map((convo) => {
-              let check = checkOnlineStatus(onlineUsers, user, convo.users);
+              // let check = checkOnlineStatus(onlineUsers, user, convo.users);
               return (
                 <Conversation
                   convo={convo}
                   key={convo._id}
-                  online={!convo.isGroup && check ? true : false}
+                 // online={!convo.isGroup && check ? true : false}
                   typing={typing}
                 />
               );

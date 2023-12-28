@@ -1,10 +1,5 @@
-import { useSelector } from "react-redux";
-import {
-  CallIcon,
-  DotsIcon,
-  SearchLargeIcon,
-  VideoCallIcon,
-} from "../../../svg";
+import { useSelector, useDispatch } from "react-redux";
+import { DotsIcon, SearchLargeIcon } from "../../../svg";
 import { capitalize } from "../../../utils/string";
 import { useEffect, useRef, useState } from "react";
 import SocketContext from "../../../context/SocketContext";
@@ -14,10 +9,31 @@ import {
   getConversationNamePhoneNumber,
   getConversationPicture,
 } from "../../../utils/chat";
+import { RiFileCloseFill } from "react-icons/ri";
+import {
+  closeConversation,
+  removeClosedConversation,
+  setActiveConversation,
+} from "../../../features/chatSlice";
+
 function ChatHeader({ online, callUser, socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
+  const { token } = user;
+  const dispatch = useDispatch();
+  const values = {
+    convo_id: activeConversation?._id,
+    token,
+  };
 
+  const closeConversationHandler = async (e) => {
+    e.preventDefault();
+    dispatch(closeConversation(values));
+    dispatch(removeClosedConversation(activeConversation));
+    dispatch(setActiveConversation({}));
+
+    //socket.emit("join conversation", newConvo.payload._id);
+  };
   return (
     <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
       {/*Container*/}
@@ -46,7 +62,7 @@ function ChatHeader({ online, callUser, socket }) {
                       " "
                     )[0]
                   )} */}
-                 {  getConversationNamePhoneNumber(user, activeConversation.users)}
+              {getConversationNamePhoneNumber(user, activeConversation.users)}
             </h1>
             <span className="text-xs dark:text-dark_svg_2">
               {online ? "Çevrimiçi" : ""}
@@ -72,6 +88,14 @@ function ChatHeader({ online, callUser, socket }) {
           <li>
             <button className="btn">
               <SearchLargeIcon className="dark:fill-dark_svg_1" />
+            </button>
+          </li>
+          <li>
+            <button
+              className="btn"
+              onClick={(e) => closeConversationHandler(e)}
+            >
+              <RiFileCloseFill className="dark:fill-dark_svg_1 w-5 h-5" />
             </button>
           </li>
           <li>

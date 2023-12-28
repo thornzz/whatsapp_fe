@@ -24,6 +24,8 @@ export const getConversationPicture = (user, users) => {
 
 export const checkOnlineStatus = (onlineUsers, user, users) => {
   let convoId = getConversationId(user, users);
+  console.log(convoId,'convoId');
   let check = onlineUsers.find((u) => u.userId === convoId);
+  console.log(check,'check');
   return check ? true : false;
 };

@@ -24,6 +24,7 @@ export const getConversations = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -33,12 +34,11 @@ export const getConversations = createAsyncThunk(
 export const open_create_conversation = createAsyncThunk(
   "conervsation/open_create",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id, isGroup,waba_user_id } = values;
+    const { token, receiver_id, isGroup, waba_user_id } = values;
     try {
-      console.log(values)
       const { data } = await axios.post(
         CONVERSATION_ENDPOINT,
-        { receiver_id, isGroup,waba_user_id },
+        { receiver_id, isGroup, waba_user_id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,6 +115,29 @@ export const createGroupConversation = createAsyncThunk(
     }
   }
 );
+
+export const closeConversation = createAsyncThunk(
+  "conervsation/close",
+  async (values, { rejectWithValue }) => {
+    const { convo_id, token } = values;
+
+    try {
+      const { data } = await axios.post(
+        `${CONVERSATION_ENDPOINT}/close`,
+        { convo_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -122,20 +145,28 @@ export const chatSlice = createSlice({
     setActiveConversation: (state, action) => {
       state.activeConversation = action.payload;
     },
+
+    removeClosedConversation: (state, action) => {
+      const removedConversations = [...state.conversations].filter(
+        (c) => c._id !== action.payload._id
+      );
+      state.conversations = removedConversations;
+    },
     updateMessagesAndConversations: (state, action) => {
       // Update messages
       let convo = state.activeConversation;
+
       if (convo._id === action.payload.conversation._id) {
         // Check if the message with the same ID already exists
         const existingMessage = state.messages.find(
           (msg) => msg._id === action.payload._id
         );
-    
+
         if (!existingMessage) {
           state.messages = [...state.messages, action.payload];
         }
       }
-    
+
       // Update conversations
       let conversation = {
         ...action.payload.conversation,
@@ -147,7 +178,7 @@ export const chatSlice = createSlice({
       newConvos.unshift(conversation);
       state.conversations = newConvos;
     },
-  
+
     updateStatues: (state, action) => {
       // Update statues of messages
       const { _id, status, conversation } = action.payload;
@@ -210,6 +241,17 @@ export const chatSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(closeConversation.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(closeConversation.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.activeConversation = {};
+      })
+      .addCase(closeConversation.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(getConversationMessages.pending, (state, action) => {
         state.status = "loading";
       })
@@ -251,6 +293,7 @@ export const {
   addFiles,
   clearFiles,
   removeFileFromFiles,
+  removeClosedConversation,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

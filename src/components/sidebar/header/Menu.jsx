@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../../features/userSlice";
 import { useState } from "react";
 import SocketContext from "../../../context/SocketContext";
+import { setActiveConversation } from "../../../features/chatSlice";
 
 function Menu({ setShowCreateGroup, socket }) {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ function Menu({ setShowCreateGroup, socket }) {
             className="py-3 pl-5 cursor-pointer hover:bg-dark_bg_3"
             onClick={() => {
              // socket.disconnect();
-              dispatch(logout());
+             dispatch(setActiveConversation({})); 
+             dispatch(logout());
+              
             }}
           >
             <span>Çıkış yap</span>
