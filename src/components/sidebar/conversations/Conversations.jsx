@@ -1,14 +1,12 @@
 import { useSelector } from "react-redux";
-import { checkOnlineStatus, getConversationId } from "../../../utils/chat";
+//import { checkOnlineStatus, getConversationId } from "../../../utils/chat";
 import Conversation from "./Conversation";
 
 export default function Conversations({ onlineUsers, typing }) {
-  
   const { conversations, activeConversation } = useSelector(
     (state) => state.chat
   );
-  console.log(conversations,'Conversations, satır 10')
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);
   return (
     <div className="convos scrollbar">
       <ul>
@@ -26,8 +24,8 @@ export default function Conversations({ onlineUsers, typing }) {
                 <Conversation
                   convo={convo}
                   key={convo._id}
-                 // online={!convo.isGroup && check ? true : false}
-                  typing={typing}
+                  // online={!convo.isGroup && check ? true : false}
+                  //  typing={typing}
                 />
               );
             })}

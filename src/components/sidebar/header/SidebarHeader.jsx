@@ -1,12 +1,35 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ChatIcon, CommunityIcon, DotsIcon, StoryIcon } from "../../../svg";
 import { useState } from "react";
 import Menu from "./Menu";
 import { CreateGroup } from "./createGroup";
+import {
+  getClosedConversations,
+  getConversations,
+  setActiveConversation,
+} from "../../../features/chatSlice";
+
 export default function SidebarHeader() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [showMenu, setShowMenu] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+
+  const handleOpenConversations = async () => {
+    if (user?.token) {
+      dispatch(getConversations(user.token));
+      dispatch(setActiveConversation({}));
+    }
+  };
+
+  const handleClosedConversations = async () => {
+    if (user?.token) {
+      const values = { token: user.token, closed: true };
+      dispatch(getClosedConversations(values));
+      dispatch(setActiveConversation({}));
+    }
+  };
+
   return (
     <>
       {/*Sidebar header*/}
@@ -23,17 +46,12 @@ export default function SidebarHeader() {
           </button>
           {/*user icons*/}
           <ul className="flex items-center gap-x-2 5">
-            <li>
+            <li onClick={handleOpenConversations}>
               <button className="btn">
                 <CommunityIcon className="dark:fill-dark_svg_1" />
               </button>
             </li>
-            <li>
-              <button className="btn">
-                <StoryIcon className="dark:fill-dark_svg_1" />
-              </button>
-            </li>
-            <li>
+            <li onClick={handleClosedConversations}>
               <button className="btn">
                 <ChatIcon className="dark:fill-dark_svg_1" />
               </button>

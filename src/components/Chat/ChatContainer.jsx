@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getConversationMessages } from "../../features/chatSlice";
-import { checkOnlineStatus, getConversationId } from "../../utils/chat";
+import {
+  getConversationMessages,
+  getClosedConversationMessages,
+} from "../../features/chatSlice";
+import { checkOnlineStatus } from "../../utils/chat";
 import { ChatActions } from "./actions";
 import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
@@ -15,10 +18,14 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
   const values = {
     token,
     convo_id: activeConversation?._id,
+    convo_name: activeConversation?.name,
   };
+
   useEffect(() => {
-    if (activeConversation?._id) {
+    if (activeConversation?._id && !activeConversation?.closed) {
       dispatch(getConversationMessages(values));
+    } else if (activeConversation?._id && activeConversation?.closed) {
+      dispatch(getClosedConversationMessages(values));
     }
   }, [activeConversation]);
   return (

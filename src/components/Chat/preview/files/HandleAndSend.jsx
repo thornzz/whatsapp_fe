@@ -29,6 +29,8 @@ function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
       message,
       convo_id: activeConversation._id,
       files: uploaded_files.length > 0 ? uploaded_files : [],
+      type: "cloudinary",
+      waba_user_phonenumber: activeConversation?.users[0]?.phonenumber,
     };
     let newMsg = await dispatch(sendMessage(values));
     socket.emit("send message", newMsg.payload);
@@ -77,7 +79,7 @@ function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
           </div>
         ))}
         {/* Add another file */}
-        <Add setActiveIndex={setActiveIndex} />
+        {/* <Add setActiveIndex={setActiveIndex} /> */}
       </div>
       {/*Send button*/}
       <div

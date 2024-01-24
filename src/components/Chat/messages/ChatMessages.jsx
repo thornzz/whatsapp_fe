@@ -1,4 +1,4 @@
-import React , { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import Message from "./Message";
 import Typing from "./Typing";
@@ -16,7 +16,7 @@ export default function ChatMessages({ typing }) {
   const scrollToBottom = () => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
   };
-
+  console.log(messages);
   return (
     <div
       className="mb-[60px] bg-[url('https://res.cloudinary.com/dmhcnhtng/image/upload/v1677358270/Untitled-1_copy_rpx8yb.jpg')]
@@ -28,26 +28,35 @@ export default function ChatMessages({ typing }) {
         {messages &&
           messages.map((message) => (
             <React.Fragment key={message._id}>
-            {/* Message files */}
-            {message.files.length > 0
-              ? message.files.map((file, index) => (
-                  <FileMessage
-                    FileMessage={file}
-                    message={message}
-                    key={`${message._id}_file_${index}`}
-                    me={user._id === message.sender._id}
-                  />
-                ))
-              : null}
-            {/* Message text */}
-            {message.message.length > 0 ? (
-              <Message
-                message={message}
-                key={`${message._id}_text`}
-                me={user._id === message.sender._id}
-              />
-            ) : null}
-          </React.Fragment>
+              {/* Message files */}
+              {message.files.length > 0 && message.type === "cloudinary"
+                ? message.files.map((file, index) => (
+                    <FileMessage
+                      FileMessage={file}
+                      message={message}
+                      key={`${message._id}_file_${index}`}
+                      me={user._id === message.sender._id}
+                    />
+                  ))
+                : message.files.length > 0 && message.type === "waba"
+                ? message.files.map((file, index) => (
+                    <FileMessage
+                      WabaMessage={file}
+                      message={message}
+                      key={`${message._id}_file_${index}`}
+                      me={user._id === message.sender._id}
+                    />
+                  ))
+                : null}
+              {/* Message text */}
+              {message.message.length > 0 && !message.files.length > 0 ? (
+                <Message
+                  message={message}
+                  key={`${message._id}_text`}
+                  me={user._id === message.sender._id}
+                />
+              ) : null}
+            </React.Fragment>
           ))}
         {typing === activeConversation._id ? <Typing key="typing" /> : null}
         <div className="mt-2" ref={endRef}></div>

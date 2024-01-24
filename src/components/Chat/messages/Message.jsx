@@ -2,7 +2,6 @@ import moment from "moment";
 import TraingleIcon from "../../../svg/triangle";
 import { MdDone, MdOutlineDoneAll } from "react-icons/md";
 export default function Message({ message, me }) {
-
   return (
     <div
       className={`w-full flex mt-2 space-x-3 max-w-xs ${
@@ -32,7 +31,7 @@ export default function Message({ message, me }) {
           </p>
           {/*Message Date*/}
           <span className="absolute right-6 bottom-0.5 text-xs text-dark_text_5 leading-none">
-            {moment(message.createdAt).format("HH:mm")}
+            {moment(message.createdAt).format("DD.MM.YYYY HH:mm")}
             {me ? (
               <span className="absolute left-8 bottom-0 text-xs text-dark_text_5 leading-none">
                 {message.status === "delivered" ? (

@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { DocumentIcon } from "../../../../../svg";
-import { addFiles } from "../../../../../features/chatSlice";
+import { addFiles } from "../../../../../features/chatSlice.js";
+
 import { useDispatch } from "react-redux";
-import { getFileType } from "../../../../../utils/file";
+import { getFileType } from "../../../../../utils/file.js";
 
 export default function DocumentAttachment() {
   const dispatch = useDispatch();
@@ -21,11 +22,7 @@ export default function DocumentAttachment() {
           "application/vnd.openxmlformats-officedocument.presentationml.presentation" &&
         file.type !== "application/vnd.ms-excel" &&
         file.type !==
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
-        file.type !== "application/vnd.rar" &&
-        file.type !== "application/zip" &&
-        file.type !== "audio/mpeg" &&
-        file.type !== "audio/wav"
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       ) {
         files = files.filter((item) => item.name !== file.name);
         console.log(file.type);
@@ -61,7 +58,7 @@ export default function DocumentAttachment() {
         hidden
         multiple
         ref={inputRef}
-        accept="application/*,text/plain"
+        accept=".xls, .xlsx, .ppt, .pptx, .doc, .docx, .txt, .pdf"
         onChange={documentHandler}
       />
     </li>

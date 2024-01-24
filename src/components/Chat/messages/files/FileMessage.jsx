@@ -3,8 +3,14 @@ import TraingleIcon from "../../../../svg/triangle";
 import FileImageVideo from "./FileImageVideo";
 import FileOthers from "./FileOthers";
 
-export default function FileMessage({ FileMessage, message, me }) {
-  const { file, type } = FileMessage;
+export default function FileMessage({ FileMessage, WabaMessage, message, me }) {
+  let file, type;
+  if (FileMessage) {
+    ({ file, type } = FileMessage);
+  } else {
+    ({ file, type } = WabaMessage);
+  }
+
   return (
     <div
       className={`w-full flex mt-2 space-x-3 max-w-xs z-10 ${
@@ -13,7 +19,7 @@ export default function FileMessage({ FileMessage, message, me }) {
     >
       {/*Message Container*/}
       <div className="relative">
-        {/* sender user message */}
+        {/* sender user message
         {!me && message.conversation.isGroup && (
           <div className="absolute top-0.5 left-[-37px]">
             <img
@@ -22,7 +28,7 @@ export default function FileMessage({ FileMessage, message, me }) {
               className="w-8 h-8 rounded-full"
             />
           </div>
-        )}
+        )} */}
 
         <div
           className={`relative h-full dark:text-dark_text_1 rounded-lg

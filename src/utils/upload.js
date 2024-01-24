@@ -2,6 +2,7 @@ import axios from "axios";
 
 const cloud_name = process.env.REACT_APP_CLOUD_NAME2;
 const cloud_secret = process.env.REACT_APP_CLOUD_SECRET2;
+console.log(cloud_name, cloud_secret);
 export const uploadFiles = async (files) => {
   let formData = new FormData();
   formData.append("upload_preset", cloud_secret);

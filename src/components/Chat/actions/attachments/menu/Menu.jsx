@@ -32,7 +32,7 @@ export default function Menu() {
           <StickerIcon />
         </button>
       </li> */}
-      <PhotoAttachment />
+      {/* <PhotoAttachment /> */}
     </ul>
   );
 }

@@ -18,12 +18,11 @@ function Conversation({ convo, socket, online, typing }) {
     receiver_id: getConversationId(user, convo.users),
     isGroup: convo.isGroup ? convo._id : false,
     token,
+    closed: convo.closed,
   };
   const openConversation = async () => {
-   
     let newConvo = await dispatch(open_create_conversation(values));
     socket.emit("join conversation", newConvo.payload._id);
-    
   };
   return (
     <li
@@ -66,8 +65,19 @@ function Conversation({ convo, socket, online, typing }) {
             <div>
               <div className="flex items-center gap-x-1 dark:text-dark_text_2">
                 <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                  {typing === convo._id ? (
-                    <p className="text-green_1">Yazıyor...</p>
+                  {convo.latestMessage.files.length > 0 &&
+                  convo.latestMessage.type === "cloudinary" ? (
+                    <p>{`${
+                      convo.latestMessage.files[0].file.original_filename
+                    }.${convo.latestMessage.files[0].type.toLowerCase()}`}</p>
+                  ) : convo.latestMessage.type === "waba" &&
+                    convo.latestMessage.files[0].file.type === "document" ? (
+                    // <p className="text-green_1">Yazıyor...</p>
+                    <p>{convo.latestMessage.files[0].file.filename}</p>
+                  ) : convo.latestMessage.type === "waba" &&
+                    convo.latestMessage.files[0].file.type === "image" ? (
+                    // <p className="text-green_1">Yazıyor...</p>
+                    <p>[Resim dosyası]</p>
                   ) : (
                     <p>
                       {convo.latestMessage?.message.length > 25

@@ -24,27 +24,49 @@ export const getConversations = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
     }
   }
 );
-export const open_create_conversation = createAsyncThunk(
-  "conervsation/open_create",
+export const getClosedConversations = createAsyncThunk(
+  "conervsation/closed",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id, isGroup, waba_user_id } = values;
     try {
-      const { data } = await axios.post(
-        CONVERSATION_ENDPOINT,
-        { receiver_id, isGroup, waba_user_id },
+      const { token, closed } = values;
+
+      const { data } = await axios.get(
+        `${CONVERSATION_ENDPOINT}/?closed=${closed}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
+export const open_create_conversation = createAsyncThunk(
+  "conervsation/open_create",
+  async (values, { rejectWithValue }) => {
+    const { token, receiver_id, isGroup, waba_user_id, closed } = values;
+    try {
+      const { data } = await axios.post(
+        CONVERSATION_ENDPOINT,
+        { receiver_id, isGroup, waba_user_id, closed },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(data, "open_create_conversation");
+      console.log(values, "open_create_conversation gönderilen data");
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -67,11 +89,31 @@ export const getConversationMessages = createAsyncThunk(
     }
   }
 );
+export const getClosedConversationMessages = createAsyncThunk(
+  "conervsation/closed_messages",
+  async (values, { rejectWithValue }) => {
+    const { token, convo_name } = values;
+    try {
+      const { data } = await axios.get(
+        `${MESSAGE_ENDPOINT}/?convo_name=${convo_name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
 export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
     console.log("send msg tetiklendi", values);
-    const { token, message, convo_id, files, waba_user_phonenumber } = values;
+    const { token, message, convo_id, files, waba_user_phonenumber, type } =
+      values;
 
     try {
       const { data } = await axios.post(
@@ -81,6 +123,7 @@ export const sendMessage = createAsyncThunk(
           convo_id,
           files,
           waba_user_phonenumber,
+          type,
         },
         {
           headers: {
@@ -229,6 +272,17 @@ export const chatSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(getClosedConversations.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getClosedConversations.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.conversations = action.payload;
+      })
+      .addCase(getClosedConversations.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(open_create_conversation.pending, (state, action) => {
         state.status = "loading";
       })
@@ -260,6 +314,17 @@ export const chatSlice = createSlice({
         state.messages = action.payload;
       })
       .addCase(getConversationMessages.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getClosedConversationMessages.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getClosedConversationMessages.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.messages = action.payload;
+      })
+      .addCase(getClosedConversationMessages.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
