@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getConversationMessages,
-  getClosedConversationMessages,
+  getClosedConversationMessages, setActiveConversation,
 } from "../../features/chatSlice";
 import { checkOnlineStatus } from "../../utils/chat";
 import { ChatActions } from "./actions";
@@ -28,6 +28,21 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
       dispatch(getClosedConversationMessages(values));
     }
   }, [activeConversation]);
+
+  //Escape tuşuna basıldığında activeConvoyu temizle
+  useEffect(function () {
+    function callback(e) {
+      if (e.code === "Escape") {
+        console.log("Escape basıldı");
+        dispatch(setActiveConversation({}));
+      }
+    }
+    document.addEventListener("keydown", callback);
+    return function () {
+      document.removeEventListener("keydown", callback);
+    }
+  }, [activeConversation]);
+
   return (
     <div className="relative w-full h-full border-l dark:border-l-dark_border_2 select-none overflow-hidden ">
       {/*Container*/}
