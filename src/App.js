@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import { io } from "socket.io-client";
 import SocketContext from "./context/SocketContext";
+import { PrimeReactProvider } from 'primereact/api';
+
 //Pages
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -23,6 +25,7 @@ function App() {
 
   return (
     <div className="dark">
+      <PrimeReactProvider>
       <SocketContext.Provider value={socket}>
         <Router>
           <Routes>
@@ -46,6 +49,7 @@ function App() {
           </Routes>
         </Router>
       </SocketContext.Provider>
+        </PrimeReactProvider>
     </div>
   );
 }

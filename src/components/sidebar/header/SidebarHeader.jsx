@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ChatIcon, CommunityIcon, DotsIcon, StoryIcon } from "../../../svg";
+import {MdHistory, MdOutlineDoneAll} from "react-icons/md";
 import { useState } from "react";
 import Menu from "./Menu";
 import { CreateGroup } from "./createGroup";
@@ -48,12 +49,12 @@ export default function SidebarHeader() {
           <ul className="flex items-center gap-x-2 5">
             <li onClick={handleOpenConversations}>
               <button className="btn">
-                <CommunityIcon className="dark:fill-dark_svg_1" />
+                <ChatIcon className="dark:fill-dark_svg_1" />
               </button>
             </li>
             <li onClick={handleClosedConversations}>
               <button className="btn">
-                <ChatIcon className="dark:fill-dark_svg_1" />
+                <MdHistory className="dark:fill-dark_svg_1 h-6 w-6"/>
               </button>
             </li>
             <li

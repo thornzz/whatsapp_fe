@@ -91,12 +91,13 @@ function Conversation({ convo, socket, online, typing }) {
           </div>
         </div>
         {/*Right*/}
-        <div className="flex flex-col gap-y-4 items-end text-xs">
-          <span className="dark:text-dark_text_2">
+        <div className="flex  gap-y-4 items-end text-xs">
+          {convo.closed ? <i className="pi pi-exclamation-triangle" style={{color: 'steelblue'}}></i> :
+              <span className="dark:text-dark_text_2">
             {convo.latestMessage?.createdAt
-              ? dateHandler(convo.latestMessage?.createdAt)
-              : ""}
-          </span>
+                ? dateHandler(convo.latestMessage?.createdAt)
+                : ""}
+          </span>}
         </div>
       </div>
       {/*Border*/}
@@ -106,7 +107,7 @@ function Conversation({ convo, socket, online, typing }) {
 }
 
 const ConversationWithContext = (props) => (
-  <SocketContext.Consumer>
+    <SocketContext.Consumer>
     {(socket) => <Conversation {...props} socket={socket} />}
   </SocketContext.Consumer>
 );

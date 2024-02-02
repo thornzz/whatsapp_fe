@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { DotsIcon, SearchLargeIcon } from "../../../svg";
-import { capitalize } from "../../../utils/string";
-import { useEffect, useRef, useState } from "react";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import React,{ useEffect, useRef, useState } from "react";
 import SocketContext from "../../../context/SocketContext";
-import Peer from "simple-peer";
 import {
   getConversationName,
   getConversationNamePhoneNumber,
@@ -18,6 +18,7 @@ import {
 
 function ChatHeader({ online, callUser, socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
+  const toast = useRef(null);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const dispatch = useDispatch();
@@ -26,8 +27,21 @@ function ChatHeader({ online, callUser, socket }) {
     token,
   };
 
-  const closeConversationHandler = async (e) => {
-    e.preventDefault();
+  const deleteDialog = () => {
+    confirmDialog({
+      message: 'Sohbeti sonlandırmak istediğinizden emin misiniz?',
+      header: 'Sohbeti sonlandır',
+      icon: 'pi pi-info-circle',
+      accept:closeConversationHandler,
+      acceptLabel:"Evet",
+      rejectLabel:"Hayır",
+      position:"center",
+      reject:()=> {toast.current.show({ severity: 'warn', summary: 'İptal edildi', detail: 'İşlem iptal edildi', life: 3000})}
+    });
+  };
+  const closeConversationHandler = async () => {
+
+    toast.current.show({ severity: 'warn', summary: 'Sonlandırıldı', detail: 'Sohbet sonlandırıldı', life: 2000 });
     dispatch(closeConversation(values));
     dispatch(removeClosedConversation(activeConversation));
     dispatch(setActiveConversation({}));
@@ -35,6 +49,9 @@ function ChatHeader({ online, callUser, socket }) {
     //socket.emit("join conversation", newConvo.payload._id);
   };
   return (
+      <>
+      <Toast ref={toast}/>
+  <ConfirmDialog />
     <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
       {/*Container*/}
       <div className="w-full flex items-center justify-between">
@@ -90,14 +107,14 @@ function ChatHeader({ online, callUser, socket }) {
               <SearchLargeIcon className="dark:fill-dark_svg_1" />
             </button>
           </li>
-          <li>
+          {!activeConversation.closed && <li>
             <button
               className="btn"
-              onClick={(e) => closeConversationHandler(e)}
+              onClick={deleteDialog}
             >
               <RiFileCloseFill className="dark:fill-dark_svg_1 w-5 h-5" />
             </button>
-          </li>
+          </li>}
           <li>
             <button className="btn">
               <DotsIcon className="dark:fill-dark_svg_1" />
@@ -106,7 +123,9 @@ function ChatHeader({ online, callUser, socket }) {
         </ul>
       </div>
     </div>
+      </>
   );
+
 }
 
 const ChatHeaderWithSocket = (props) => (
