@@ -1,24 +1,32 @@
-import { useSelector, useDispatch } from "react-redux";
-import { DotsIcon, SearchLargeIcon } from "../../../svg";
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Toast } from 'primereact/toast';
-import React,{ useEffect, useRef, useState } from "react";
-import SocketContext from "../../../context/SocketContext";
+import { Button, Menu, rem, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import {
-  getConversationName,
-  getConversationNamePhoneNumber,
-  getConversationPicture,
-} from "../../../utils/chat";
+  IconArrowsLeftRight,
+  IconMessageCircle,
+  IconPhoto,
+  IconSearch,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
+import React from "react";
 import { RiFileCloseFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+
+import SocketContext from "../../../context/SocketContext";
 import {
   closeConversation,
   removeClosedConversation,
   setActiveConversation,
 } from "../../../features/chatSlice";
+import { DotsIcon, SearchLargeIcon } from "../../../svg";
+import {
+  getConversationNamePhoneNumber,
+  getConversationPicture,
+} from "../../../utils/chat";
 
 function ChatHeader({ online, callUser, socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
-  const toast = useRef(null);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const dispatch = useDispatch();
@@ -27,68 +35,78 @@ function ChatHeader({ online, callUser, socket }) {
     token,
   };
 
-  const deleteDialog = () => {
-    confirmDialog({
-      message: 'Sohbeti sonlandırmak istediğinizden emin misiniz?',
-      header: 'Sohbeti sonlandır',
-      icon: 'pi pi-info-circle',
-      accept:closeConversationHandler,
-      acceptLabel:"Evet",
-      rejectLabel:"Hayır",
-      position:"center",
-      reject:()=> {toast.current.show({ severity: 'warn', summary: 'İptal edildi', detail: 'İşlem iptal edildi', life: 3000})}
+  const deleteDialog = () =>
+    modals.openConfirmModal({
+      title: "Sohbet sonlandırma",
+      children: (
+        <Text size="sm">
+          İlgili sohbeti sonlandırma işlemine devam etmek istiyor musunuz?
+        </Text>
+      ),
+      confirmProps: { color: "red" },
+      centered: true,
+      labels: { confirm: "Onayla", cancel: "İptal et" },
+      onCancel: () =>
+        notifications.show({
+          color: "red",
+          position: "bottom-center",
+          title: "Sohbeti sonlandırma",
+          message: "Sohbeti sonlandırma işlemi iptal edildi",
+        }),
+      onConfirm: closeConversationHandler,
     });
-  };
-  const closeConversationHandler = async () => {
 
-    toast.current.show({ severity: 'warn', summary: 'Sonlandırıldı', detail: 'Sohbet sonlandırıldı', life: 2000 });
+  const closeConversationHandler = async () => {
     dispatch(closeConversation(values));
     dispatch(removeClosedConversation(activeConversation));
     dispatch(setActiveConversation({}));
-
+    notifications.show({
+      color: "red",
+      position: "bottom-center",
+      title: "Sohbeti sonlandırma",
+      message: "Sohbet arşive taşındı",
+    });
     //socket.emit("join conversation", newConvo.payload._id);
   };
   return (
-      <>
-      <Toast ref={toast}/>
-  <ConfirmDialog />
-    <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
-      {/*Container*/}
-      <div className="w-full flex items-center justify-between">
-        {/*left*/}
-        <div className="flex items-center gap-x-4">
-          {/*Conversation image*/}
-          <button className="btn">
-            <img
-              src={
-                activeConversation.isGroup
-                  ? activeConversation.picture
-                  : getConversationPicture(user, activeConversation.users)
-              }
-              alt=""
-              className="w-full h-full rounded-full object-cover"
-            />
-          </button>
-          {/*Conversation name and online status*/}
-          <div className="flex flex-col">
-            <h1 className="dark:text-white text-md font-bold">
-              {/* {activeConversation.isGroup
+    <>
+      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
+        {/*Container*/}
+        <div className="w-full flex items-center justify-between">
+          {/*left*/}
+          <div className="flex items-center gap-x-4">
+            {/*Conversation image*/}
+            <button className="btn">
+              <img
+                src={
+                  activeConversation.isGroup
+                    ? activeConversation.picture
+                    : getConversationPicture(user, activeConversation.users)
+                }
+                alt=""
+                className="w-full h-full rounded-full object-cover"
+              />
+            </button>
+            {/*Conversation name and online status*/}
+            <div className="flex flex-col">
+              <h1 className="dark:text-white text-md font-bold">
+                {/* {activeConversation.isGroup
                 ? activeConversation.name
                 : capitalize(
                     getConversationName(user, activeConversation.users).split(
                       " "
                     )[0]
                   )} */}
-              {getConversationNamePhoneNumber(user, activeConversation.users)}
-            </h1>
-            <span className="text-xs dark:text-dark_svg_2">
-              {online ? "Çevrimiçi" : ""}
-            </span>
+                {getConversationNamePhoneNumber(user, activeConversation.users)}
+              </h1>
+              <span className="text-xs dark:text-dark_svg_2">
+                {online ? "Çevrimiçi" : ""}
+              </span>
+            </div>
           </div>
-        </div>
-        {/*Right*/}
-        <ul className="flex items-center gap-x-2.5">
-          {/* {1 == 1 ? (
+          {/*Right*/}
+          <ul className="flex items-center gap-x-2.5">
+            {/* {1 == 1 ? (
             <li onClick={() => callUser()}>
               <button className="btn">
                 <VideoCallIcon />
@@ -102,30 +120,74 @@ function ChatHeader({ online, callUser, socket }) {
               </button>
             </li>
           ) : null} */}
-          <li>
-            <button className="btn">
-              <SearchLargeIcon className="dark:fill-dark_svg_1" />
-            </button>
-          </li>
-          {!activeConversation.closed && <li>
-            <button
-              className="btn"
-              onClick={deleteDialog}
-            >
-              <RiFileCloseFill className="dark:fill-dark_svg_1 w-5 h-5" />
-            </button>
-          </li>}
-          <li>
-            <button className="btn">
-              <DotsIcon className="dark:fill-dark_svg_1" />
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-      </>
-  );
+            {/* <li>
+              <button className="btn">
+                <SearchLargeIcon className="dark:fill-dark_svg_1" />
+              </button>
+            </li> */}
 
+            <li>
+              <Menu
+                position="left-start"
+                offset={0}
+                shadow="md"
+                width={200}
+                styles={{
+                  dropdown: {
+                    backgroundColor: "#202c33",
+                    borderColor: "#46494d",
+                  },
+                  itemLabel: {
+                    color: "#e9edef",
+                  },
+                }}
+              >
+                <Menu.Target>
+                  <button className="btn">
+                    <DotsIcon className="dark:fill-dark_svg_1" />
+                  </button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Label>Sohbet</Menu.Label>
+
+                  <Menu.Item
+                    disabled={activeConversation.closed ? true : false}
+                    onClick={deleteDialog}
+                    color="red"
+                    leftSection={
+                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                    }
+                  >
+                    Sohbeti sonlandır
+                  </Menu.Item>
+
+                  <Menu.Divider />
+
+                  <Menu.Label>Diğer</Menu.Label>
+
+                  <Menu.Item
+                    disabled
+                    leftSection={
+                      <IconSearch style={{ width: rem(14), height: rem(14) }} />
+                    }
+                  >
+                    Ara
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </li>
+
+            {/* <li>
+              <button className="btn">
+                <DotsIcon className="dark:fill-dark_svg_1" />
+              </button>
+            </li> */}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
 }
 
 const ChatHeaderWithSocket = (props) => (

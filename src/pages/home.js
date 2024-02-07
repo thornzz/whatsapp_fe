@@ -1,15 +1,11 @@
+import { Button, rem } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Peer from "simple-peer";
+
 import { ChatContainer, WhatsappHome } from "../components/Chat";
 import { Sidebar } from "../components/sidebar";
 import SocketContext from "../context/SocketContext";
-import {
-  getConversations,
-  sendMessage,
-  updateStatues,
-  updateMessagesAndConversations,
-} from "../features/chatSlice";
+import { getConversations, sendMessage, updateMessagesAndConversations, updateStatues } from "../features/chatSlice";
 
 function Home({ socket }) {
   const dispatch = useDispatch();
@@ -84,6 +80,7 @@ function Home({ socket }) {
 
   return (
     <>
+    
       <div className="h-screen w-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
         {/*container*/}
         <div className="container h-screen w-screen flex py-[19px]">

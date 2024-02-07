@@ -1,20 +1,15 @@
+import { Menu, rem } from "@mantine/core";
+import { IconLogout, IconSearch, IconSettings } from "@tabler/icons-react";
+import { MdHistory } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatIcon, CommunityIcon, DotsIcon, StoryIcon } from "../../../svg";
-import {MdHistory, MdOutlineDoneAll} from "react-icons/md";
-import { useState } from "react";
-import Menu from "./Menu";
-import { CreateGroup } from "./createGroup";
-import {
-  getClosedConversations,
-  getConversations,
-  setActiveConversation,
-} from "../../../features/chatSlice";
+
+import { getClosedConversations, getConversations, setActiveConversation } from "../../../features/chatSlice";
+import { logout } from "../../../features/userSlice";
+import { ChatIcon, DotsIcon } from "../../../svg";
 
 export default function SidebarHeader() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
 
   const handleOpenConversations = async () => {
     if (user?.token) {
@@ -54,27 +49,60 @@ export default function SidebarHeader() {
             </li>
             <li onClick={handleClosedConversations}>
               <button className="btn">
-                <MdHistory className="dark:fill-dark_svg_1 h-6 w-6"/>
+                <MdHistory className="dark:fill-dark_svg_1 h-6 w-6" />
               </button>
             </li>
-            <li
-              className="relative"
-              onClick={() => setShowMenu((prev) => !prev)}
-            >
-              <button className={`btn ${showMenu ? "bg-dark_hover_1" : ""}`}>
-                <DotsIcon className="dark:fill-dark_svg_1" />
-              </button>
-              {showMenu ? (
-                <Menu setShowCreateGroup={setShowCreateGroup} />
-              ) : null}
+            <li>
+              <Menu
+                position="left-start"
+                offset={0}
+                shadow="md"
+                width={200}
+                styles={{
+                  dropdown: {
+                    backgroundColor: "#202c33",
+                    borderColor: "#46494d",
+                  },
+                  itemLabel: {
+                    color: "#e9edef",
+                  },
+                }}
+              >
+                <Menu.Target>
+                  <button className="btn">
+                    <DotsIcon className="dark:fill-dark_svg_1" />
+                  </button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item
+                    disabled
+                    leftSection={
+                      <IconSettings
+                        style={{ width: rem(14), height: rem(14) }}
+                      />
+                    }
+                  >
+                    Ayarlar
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      // socket.disconnect();
+                      dispatch(setActiveConversation({}));
+                      dispatch(logout());
+                    }}
+                    leftSection={
+                      <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                    }
+                  >
+                    Oturumu sonlandır
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </li>
           </ul>
         </div>
       </div>
-      {/*Create Group*/}
-      {showCreateGroup && (
-        <CreateGroup setShowCreateGroup={setShowCreateGroup} />
-      )}
     </>
   );
 }

@@ -1,18 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+
+import App from "./App";
 import { store } from "./app/store";
-import 'primeicons/primeicons.css';
-import 'primereact/resources/themes/bootstrap4-dark-blue/theme.css';
-import 'primereact/resources/primereact.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import "./index.css";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+import '@mantine/spotlight/styles.css';
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={store}>
-    <App />
-    </Provider>
+  <MantineProvider defaultColorScheme="dark">
+    <Notifications />
+    <ModalsProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ModalsProvider>
+  </MantineProvider>
 );
-
-

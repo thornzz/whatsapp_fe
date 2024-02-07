@@ -1,15 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ClipLoader } from "react-spinners";
+import SocketContext from "../../../context/SocketContext";
 import { sendMessage } from "../../../features/chatSlice";
 import { SendIcon } from "../../../svg";
 import { Attachments } from "./attachments";
 import EmojiPickerApp from "./EmojiPicker";
 import Input from "./Input";
-import SocketContext from "../../../context/SocketContext";
+import { useClickOutside } from "@mantine/hooks";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners";
+
 function ChatActions({ socket }) {
   const dispatch = useDispatch();
   const [showPicker, setShowPicker] = useState(false);
+  const refShowPicker = useClickOutside(() => setShowPicker(false));
   const [showAttachments, setShowAttachments] = useState(false);
   const [loading, setLoading] = useState(false);
   const { activeConversation, status } = useSelector((state) => state.chat);
@@ -45,7 +48,7 @@ function ChatActions({ socket }) {
      `}
       >
         {/*Emojis and attachpments*/}
-        <ul className="flex gap-x-2">
+        <ul className="flex gap-x-2" ref={refShowPicker}>
           <EmojiPickerApp
             textRef={textRef}
             message={message}

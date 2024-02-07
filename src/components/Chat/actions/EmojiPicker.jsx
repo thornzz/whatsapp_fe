@@ -1,5 +1,6 @@
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useState } from "react";
+
 import { CloseIcon, EmojiIcon } from "../../../svg";
 
 export default function EmojiPickerApp({
@@ -13,7 +14,7 @@ export default function EmojiPickerApp({
   const [cursorPosition, setCursorPosition] = useState();
   useEffect(() => {
     textRef.current.selectionEnd = cursorPosition;
-  }, [cursorPosition]);
+  }, [cursorPosition,textRef]);
   const handleEmoji = (emojiData, e) => {
     const { emoji } = emojiData;
     const ref = textRef.current;

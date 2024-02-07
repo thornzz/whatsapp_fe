@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
-import { logout } from "../../../features/userSlice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import SocketContext from "../../../context/SocketContext";
 import { setActiveConversation } from "../../../features/chatSlice";
+import { logout } from "../../../features/userSlice";
 
 function Menu({ setShowCreateGroup, socket }) {
   const dispatch = useDispatch();
