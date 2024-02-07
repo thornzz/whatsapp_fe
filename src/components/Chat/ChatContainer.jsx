@@ -1,3 +1,8 @@
+import { LoadingOverlay } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
   getClosedConversationMessages,
   getConversationMessages,
@@ -8,12 +13,14 @@ import { ChatActions } from "./actions";
 import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import FilesPreview from "./preview/files/FilesPreview";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 export default function ChatContainer({ onlineUsers, typing, callUser }) {
   const dispatch = useDispatch();
-  const { activeConversation, files } = useSelector((state) => state.chat);
+  const { activeConversation, files, status } = useSelector(
+    (state) => state.chat
+  );
+  const [visible, { open, close }] = useDisclosure(false);
+
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const values = {
@@ -21,6 +28,14 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     convo_id: activeConversation?._id,
     convo_name: activeConversation?.name,
   };
+
+  useEffect(() => {
+    if (status === "loading" || status === "failed") {
+      open();
+    } else if (status === "succeeded") {
+      close();
+    }
+  }, [status]);
 
   useEffect(() => {
     if (activeConversation?._id && !activeConversation?.closed) {
@@ -49,6 +64,13 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
 
   return (
     <div className="relative w-full h-full border-l dark:border-l-dark_border_2 select-none overflow-hidden ">
+      <LoadingOverlay
+        visible={visible}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 3 }}
+        loaderProps={{ color: "#075E54", type: "bars" }}
+      />
+
       {/*Container*/}
       <div>
         {/*Chat header*/}
