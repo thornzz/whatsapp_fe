@@ -24,24 +24,20 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers }) {
     >
       {/*Container*/}
       <div className="mt-5">
-        {/*Return/Close button*/}
-        <button
-          className="btn w-6 h-6 border"
+        <ActionIcon
+          variant="subtle"
+          size={30}
+          color="gray"
+          aria-label="Online Users"
           onClick={() => setShowOnlineUsers(false)}
         >
-          <ActionIcon
-            variant="subtle"
-            size={30}
-            color="gray"
-            aria-label="Online Users"
-          >
-            <IconArrowBack
-              size={12}
-              style={{ width: "100%", height: "100%" }}
-              stroke={2}
-            />
-          </ActionIcon>
-        </button>
+          <IconArrowBack
+            size={12}
+            style={{ width: "100%", height: "100%" }}
+            stroke={2}
+          />
+        </ActionIcon>
+
         <Group justify="center">
           <Title order={4}>Çevrimiçi Temsilciler</Title>
         </Group>
