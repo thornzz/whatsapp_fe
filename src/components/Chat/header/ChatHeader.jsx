@@ -1,32 +1,36 @@
-import { Button, Menu, rem, Text } from "@mantine/core";
+import moment from "moment";
+import {
+  ActionIcon,
+  Menu,
+  rem,
+  Text,
+  useCombobox,
+  Combobox,
+  Highlight,
+  ScrollArea,
+  Flex,
+  Divider,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import {
-  IconArrowsLeftRight,
-  IconMessageCircle,
-  IconPhoto,
-  IconSearch,
-  IconSettings,
-  IconTrash,
-} from "@tabler/icons-react";
-import React from "react";
-import { RiFileCloseFill } from "react-icons/ri";
+import { IconDotsVertical, IconSearch, IconTrash } from "@tabler/icons-react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import SocketContext from "../../../context/SocketContext";
 import {
   closeConversation,
   removeClosedConversation,
   setActiveConversation,
 } from "../../../features/chatSlice";
-import { DotsIcon, SearchLargeIcon } from "../../../svg";
 import {
   getConversationNamePhoneNumber,
   getConversationPicture,
 } from "../../../utils/chat";
+import classes from "./ChatHeader.module.css";
+import { tarihFormatla } from "../../../utils/date";
 
-function ChatHeader({ online, callUser, socket }) {
-  const { activeConversation } = useSelector((state) => state.chat);
+function ChatHeader({ online, socket, onFocusedMessageChange }) {
+  const { activeConversation, messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const dispatch = useDispatch();
@@ -34,7 +38,50 @@ function ChatHeader({ online, callUser, socket }) {
     convo_id: activeConversation?._id,
     token,
   };
+  const [search, setSearch] = useState("");
 
+  const combobox = useCombobox({
+    scrollBehavior: "smooth",
+    onDropdownClose: () => {
+      combobox.resetSelectedOption();
+      setSearch("");
+    },
+
+    onDropdownOpen: () => {
+      combobox.focusSearchInput();
+    },
+  });
+
+  const options = messages
+    .filter((item) =>
+      item.message.toLowerCase().includes(search.toLowerCase().trim())
+    )
+    .map((item, index) => (
+      <Combobox.Option
+        className={classes.option}
+        value={item}
+        key={item._id}
+        onMouseOver={() => combobox.selectOption(index)}
+        style={{ padding: 2 }}
+      >
+        <Flex justify="flex-start" align="flex-start" direction="column">
+          <Text size="xs">{tarihFormatla(item.createdAt)}</Text>
+          <Highlight
+            highlight={search}
+            size="sm"
+            highlightStyles={{
+              backgroundImage: "linear-gradient(45deg, #09A884,#09A884)",
+              fontWeight: 700,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            {item.message}
+          </Highlight>
+        </Flex>
+        <Divider my="xs" variant="dotted" />
+      </Combobox.Option>
+    ));
   const deleteDialog = () =>
     modals.openConfirmModal({
       title: "Sohbet sonlandırma",
@@ -120,11 +167,69 @@ function ChatHeader({ online, callUser, socket }) {
               </button>
             </li>
           ) : null} */}
-            {/* <li>
-              <button className="btn">
-                <SearchLargeIcon className="dark:fill-dark_svg_1" />
-              </button>
-            </li> */}
+            <li>
+              <Combobox
+                withinPortal={false}
+                store={combobox}
+                width={350}
+                size="md"
+                position="bottom"
+                onOptionSubmit={(val) => {
+                  onFocusedMessageChange(val);
+                  combobox.closeDropdown();
+                }}
+                styles={{
+                  dropdown: {
+                    backgroundColor: "#202c33",
+                    borderColor: "#46494d",
+                    marginLeft: "-95px",
+                  },
+                  search: {
+                    backgroundColor: "#202c33",
+                    borderColor: "#46494d",
+                  },
+                }}
+              >
+                <Combobox.Target withAriaAttributes={false}>
+                  <ActionIcon
+                    variant="light"
+                    size={36}
+                    color="gray"
+                    aria-label="Search"
+                    onClick={() => {
+                      combobox.toggleDropdown();
+                    }}
+                  >
+                    <IconSearch
+                      style={{ width: "100%", height: "100%" }}
+                      stroke={1.5}
+                    />
+                  </ActionIcon>
+                </Combobox.Target>
+
+                <Combobox.Dropdown>
+                  <Combobox.Search
+                    value={search}
+                    onChange={(event) => setSearch(event.currentTarget.value)}
+                    placeholder="Mesajlarda Ara"
+                  />
+                  <Combobox.Options hidden={search.trim().length === 0}>
+                    <ScrollArea.Autosize mah={200} type="scroll">
+                      {options.length > 0 ? (
+                        options
+                      ) : (
+                        <Combobox.Empty>Mesaj bulunamadı :/</Combobox.Empty>
+                      )}
+                    </ScrollArea.Autosize>
+                  </Combobox.Options>
+                  <Combobox.Footer>
+                    <Text fz="xs" c="dimmed" hidden={search.trim().length > 0}>
+                      {`+${activeConversation.name} numarası ile aranızdaki mesajları arayın`}
+                    </Text>
+                  </Combobox.Footer>
+                </Combobox.Dropdown>
+              </Combobox>
+            </li>
 
             <li>
               <Menu
@@ -143,9 +248,17 @@ function ChatHeader({ online, callUser, socket }) {
                 }}
               >
                 <Menu.Target>
-                  <button className="btn">
-                    <DotsIcon className="dark:fill-dark_svg_1" />
-                  </button>
+                  <ActionIcon
+                    variant="light"
+                    color="gray"
+                    aria-label="Menu"
+                    size={36}
+                  >
+                    <IconDotsVertical
+                      style={{ width: "100%", height: "100%" }}
+                      stroke={1.5}
+                    />
+                  </ActionIcon>
                 </Menu.Target>
 
                 <Menu.Dropdown>
@@ -163,17 +276,6 @@ function ChatHeader({ online, callUser, socket }) {
                   </Menu.Item>
 
                   <Menu.Divider />
-
-                  <Menu.Label>Diğer</Menu.Label>
-
-                  <Menu.Item
-                    disabled
-                    leftSection={
-                      <IconSearch style={{ width: rem(14), height: rem(14) }} />
-                    }
-                  >
-                    Ara
-                  </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
             </li>

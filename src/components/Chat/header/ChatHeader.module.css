@@ -1,0 +1,6 @@
+.option {
+    &[data-combobox-selected] {
+      background-color: #2A3942;
+      font-weight: 500;
+    }
+  }

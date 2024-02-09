@@ -1,4 +1,5 @@
 import moment from "moment";
+require("moment/locale/tr");
 
 export const dateHandler = (date) => {
   let now = moment();
@@ -35,3 +36,18 @@ export const dateHandler = (date) => {
   }
   return time;
 };
+
+export function tarihFormatla(tarih) {
+  let girilenTarih = moment(tarih);
+  let simdi = moment();
+
+  if (simdi.isSame(girilenTarih, "day")) {
+    return "Bugün";
+  } else if (simdi.subtract(1, "days").isSame(girilenTarih, "day")) {
+    return "Dün";
+  } else if (simdi.diff(girilenTarih, "days") <= 4) {
+    return girilenTarih.locale("tr").format("dddd");
+  } else {
+    return girilenTarih.format("DD.MM.YYYY");
+  }
+}

@@ -11,7 +11,8 @@ import { store } from "./app/store";
 import "./index.css";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import '@mantine/spotlight/styles.css';
+import "@mantine/spotlight/styles.css";
+import "@mantine/core/styles/Combobox.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

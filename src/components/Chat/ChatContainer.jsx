@@ -1,6 +1,6 @@
 import { LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -29,6 +29,11 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     convo_name: activeConversation?.name,
   };
 
+  const [focusedMessage, setFocusedMessageChange] = useState({});
+  const handleFocusedMessageChange = (message) => {
+    setFocusedMessageChange(message);
+  };
+
   useEffect(() => {
     if (status === "loading" || status === "failed") {
       open();
@@ -50,7 +55,6 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     function () {
       function callback(e) {
         if (e.code === "Escape") {
-          console.log("Escape basıldı");
           dispatch(setActiveConversation({}));
         }
       }
@@ -81,13 +85,14 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
               : checkOnlineStatus(onlineUsers, user, activeConversation.users)
           }
           callUser={callUser}
+          onFocusedMessageChange={handleFocusedMessageChange}
         />
         {files.length > 0 ? (
           <FilesPreview />
         ) : (
           <>
             {/*Chat messages*/}
-            <ChatMessages typing={typing} />
+            <ChatMessages typing={typing} focusedMessage={focusedMessage} />
             {/* Chat Actions */}
             <ChatActions />
           </>
