@@ -51,13 +51,13 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers }) {
             >
               <Grid gutter={{ base: 1.5 }} align="center">
                 <Grid.Col span={1.2}>
-                  <Avatar src={user.userId.picture} />
+                  <Avatar src={user.user.picture} />
                 </Grid.Col>
                 <Grid.Col span={3.5}>
-                  <Text>{user.userId.name}</Text>
+                  <Text>{user.user.name}</Text>
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Text>{user.userId.email}</Text>
+                  <Text>{user.user.email}</Text>
                 </Grid.Col>
                 <Grid.Col span={1} offset={4}>
                   <IconWifi

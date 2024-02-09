@@ -13,7 +13,7 @@ import { ChatIcon, DotsIcon } from "../../../svg";
 import OnlineUsers from "./OnlineUsers";
 // import { CreateGroup } from "../header/createGroup/index.js";
 
-export default function SidebarHeader({ onlineUsers }) {
+export default function SidebarHeader({ onlineUsers, socket }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
@@ -104,9 +104,10 @@ export default function SidebarHeader({ onlineUsers }) {
                     </Menu.Item>
                     <Menu.Item
                       onClick={() => {
-                        // socket.disconnect();
+                        //socket.disconnect();
                         dispatch(setActiveConversation({}));
                         dispatch(logout());
+                        socket.disconnect();
                       }}
                       leftSection={
                         <IconLogout

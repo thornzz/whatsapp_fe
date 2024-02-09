@@ -98,7 +98,7 @@ export const chatSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getConversations.pending, (state, action) => {
-        // state.status = "loading";
+        state.status = "loading";
       })
       .addCase(getConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -109,7 +109,7 @@ export const chatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getClosedConversations.pending, (state, action) => {
-        //state.status = "loading";
+        state.status = "loading";
       })
       .addCase(getClosedConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -120,7 +120,7 @@ export const chatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getUserConversations.pending, (state, action) => {
-        // state.status = "loading";
+        state.status = "loading";
       })
       .addCase(getUserConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -131,7 +131,7 @@ export const chatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(open_create_conversation.pending, (state, action) => {
-        //state.status = "loading";
+        state.status = "loading";
       })
       .addCase(open_create_conversation.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -143,7 +143,7 @@ export const chatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(closeConversation.pending, (state, action) => {
-        //state.status = "loading";
+        state.status = "loading";
       })
       .addCase(closeConversation.fulfilled, (state, action) => {
         state.status = "succeeded";

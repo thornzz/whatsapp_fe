@@ -5,12 +5,12 @@ import { SidebarHeader } from "./header";
 import { Search } from "./search";
 import { SearchResults } from "./search";
 
-export default function Sidebar({ onlineUsers, typing }) {
+export default function Sidebar({ onlineUsers, typing, socket }) {
   const [searchResults, setSearchResults] = useState([]);
   return (
     <div className="flex0030 max-w-[30%] h-full select-none">
       {/*Sidebar Header*/}
-      <SidebarHeader onlineUsers={onlineUsers} />
+      <SidebarHeader onlineUsers={onlineUsers} socket={socket} />
       {/*Notifications */}
       {/* <Notifications /> */}
       {/*Search*/}

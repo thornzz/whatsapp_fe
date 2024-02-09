@@ -32,10 +32,11 @@ function Home({ socket }) {
   useEffect(() => {
     if (!socket.connected) socket.connect();
     const { token, ...userWithoutToken } = user;
-    socket.emit("join", userWithoutToken);
+    const userwithUserId = { userId: user._id, user: userWithoutToken };
+    socket.emit("join", userwithUserId);
     socket.on("connect", () => {
       console.log("tekrar bağlandık");
-      socket.emit("join", userWithoutToken);
+      socket.emit("join", userwithUserId);
     });
   }, []);
 
@@ -67,8 +68,6 @@ function Home({ socket }) {
 
     //incoming waba message
     socket.on("incoming-waba-message", async ({ message }) => {
-      console.log("incoming-waba-msg tetiklendi");
-      console.log(message);
       socket.emit("incoming-waba-message-server", {
         message,
         userId: user._id,
@@ -76,7 +75,6 @@ function Home({ socket }) {
     });
     //incoming waba message
     socket.on("incoming-waba-status", async ({ message }) => {
-      //console.log('incoming-waba-status tetiklendi',message);
       socket.emit("incoming-waba-statues-server", {
         message,
         userId: user._id,
@@ -91,7 +89,7 @@ function Home({ socket }) {
         <div className="container h-screen w-screen flex py-[19px]">
           {/*Sidebar*/}
           {/* <Sidebar onlineUsers={onlineUsers} typing={typing} /> */}
-          <Sidebar onlineUsers={onlineUsers} />
+          <Sidebar onlineUsers={onlineUsers} socket={socket} />
           {activeConversation._id ? (
             <ChatContainer
               onlineUsers={onlineUsers}
