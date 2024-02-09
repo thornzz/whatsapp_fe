@@ -8,6 +8,7 @@ import {
 } from "../../../utils/chat";
 import { dateHandler } from "../../../utils/date";
 import { capitalize } from "../../../utils/string";
+import { IconMessageOff } from "@tabler/icons-react";
 
 function Conversation({ convo, socket, online, typing }) {
   const dispatch = useDispatch();
@@ -92,12 +93,18 @@ function Conversation({ convo, socket, online, typing }) {
         </div>
         {/*Right*/}
         <div className="flex  gap-y-4 items-end text-xs">
-          {convo.closed ? <i className="pi pi-exclamation-triangle" style={{color: 'steelblue'}}></i> :
-              <span className="dark:text-dark_text_2">
-            {convo.latestMessage?.createdAt
+          {convo.closed ? (
+            <IconMessageOff
+              style={{ width: "80%", height: "80%" }}
+              stroke={1.5}
+            />
+          ) : (
+            <span className="dark:text-dark_text_2">
+              {convo.latestMessage?.createdAt
                 ? dateHandler(convo.latestMessage?.createdAt)
                 : ""}
-          </span>}
+            </span>
+          )}
         </div>
       </div>
       {/*Border*/}
@@ -107,7 +114,7 @@ function Conversation({ convo, socket, online, typing }) {
 }
 
 const ConversationWithContext = (props) => (
-    <SocketContext.Consumer>
+  <SocketContext.Consumer>
     {(socket) => <Conversation {...props} socket={socket} />}
   </SocketContext.Consumer>
 );

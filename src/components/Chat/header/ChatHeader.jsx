@@ -21,6 +21,7 @@ import {
   closeConversation,
   removeClosedConversation,
   setActiveConversation,
+  setFocusedMessage,
 } from "../../../features/chatSlice";
 import {
   getConversationNamePhoneNumber,
@@ -29,7 +30,7 @@ import {
 import classes from "./ChatHeader.module.css";
 import { tarihFormatla } from "../../../utils/date";
 
-function ChatHeader({ online, socket, onFocusedMessageChange }) {
+function ChatHeader({ online, socket }) {
   const { activeConversation, messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
@@ -172,10 +173,11 @@ function ChatHeader({ online, socket, onFocusedMessageChange }) {
                 withinPortal={false}
                 store={combobox}
                 width={350}
+                height={300}
                 size="md"
                 position="bottom"
                 onOptionSubmit={(val) => {
-                  onFocusedMessageChange(val);
+                  dispatch(setFocusedMessage(val));
                   combobox.closeDropdown();
                 }}
                 styles={{

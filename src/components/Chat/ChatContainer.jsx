@@ -29,11 +29,6 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     convo_name: activeConversation?.name,
   };
 
-  const [focusedMessage, setFocusedMessageChange] = useState({});
-  const handleFocusedMessageChange = (message) => {
-    setFocusedMessageChange(message);
-  };
-
   useEffect(() => {
     if (status === "loading" || status === "failed") {
       open();
@@ -85,14 +80,13 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
               : checkOnlineStatus(onlineUsers, user, activeConversation.users)
           }
           callUser={callUser}
-          onFocusedMessageChange={handleFocusedMessageChange}
         />
         {files.length > 0 ? (
           <FilesPreview />
         ) : (
           <>
             {/*Chat messages*/}
-            <ChatMessages typing={typing} focusedMessage={focusedMessage} />
+            <ChatMessages typing={typing} />
             {/* Chat Actions */}
             <ChatActions />
           </>

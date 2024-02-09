@@ -5,8 +5,10 @@ import FileMessage from "./files/FileMessage";
 import Message from "./Message";
 import Typing from "./Typing";
 
-export default function ChatMessages({ typing, focusedMessage }) {
-  const { messages, activeConversation } = useSelector((state) => state.chat);
+export default function ChatMessages({ typing }) {
+  const { messages, activeConversation, focusedMessage } = useSelector(
+    (state) => state.chat
+  );
   const { user } = useSelector((state) => state.user);
   const endRef = useRef();
   const messageRefs = useRef({});

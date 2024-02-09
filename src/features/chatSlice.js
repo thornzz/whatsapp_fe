@@ -10,6 +10,7 @@ const initialState = {
   conversations: [],
   activeConversation: {},
   messages: [],
+  focusedMessage: {},
   notifications: [],
   files: [],
 };
@@ -21,7 +22,9 @@ export const chatSlice = createSlice({
     setActiveConversation: (state, action) => {
       state.activeConversation = action.payload;
     },
-
+    setFocusedMessage: (state, action) => {
+      state.focusedMessage = action.payload;
+    },
     removeClosedConversation: (state, action) => {
       const removedConversations = [...state.conversations].filter(
         (c) => c._id !== action.payload._id
@@ -387,6 +390,7 @@ export const closeConversation = createAsyncThunk(
 
 export const {
   setActiveConversation,
+  setFocusedMessage,
   updateMessagesAndConversations,
   updateStatues,
   addFiles,

@@ -3,16 +3,21 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { MdDone, MdOutlineDoneAll, MdSmsFailed } from "react-icons/md";
 import { Mark } from "@mantine/core";
 import { useClickOutside } from "@mantine/hooks";
-
 import TraingleIcon from "../../../svg/triangle";
+import { useDispatch } from "react-redux";
+import { setFocusedMessage } from "../../../features/chatSlice";
 
 const Message = forwardRef(
   ({ message, me, index, onRefUpdate, focusedMessage }, ref) => {
     const messageRef = useRef();
+    const dispatch = useDispatch();
     const isFocusedMessage = message?._id === focusedMessage?._id;
     const [isHighlighted, setHighlighted] = useState(false);
-    const clickOutSideRef = useClickOutside(() => setHighlighted(false));
 
+    const clickOutSideRef = useClickOutside(() => {
+      setHighlighted(false);
+      dispatch(setFocusedMessage({}));
+    });
     // ref to the parent component during rendering
     useEffect(() => {
       onRefUpdate(messageRef, index, message._id);
@@ -21,7 +26,6 @@ const Message = forwardRef(
     useEffect(() => {
       setHighlighted(true);
     }, [focusedMessage]);
-
     return (
       <>
         <div
