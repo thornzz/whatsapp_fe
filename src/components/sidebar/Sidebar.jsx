@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Conversations } from "./conversations";
 import { SidebarHeader } from "./header";
-// import { Notifications } from "./notifications";
+//import { Notifications } from "./notifications";
 import { Search } from "./search";
 import { SearchResults } from "./search";
 
@@ -10,7 +10,7 @@ export default function Sidebar({ onlineUsers, typing }) {
   return (
     <div className="flex0030 max-w-[30%] h-full select-none">
       {/*Sidebar Header*/}
-      <SidebarHeader />
+      <SidebarHeader onlineUsers={onlineUsers} />
       {/*Notifications */}
       {/* <Notifications /> */}
       {/*Search*/}

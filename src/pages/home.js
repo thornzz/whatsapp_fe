@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ChatContainer, WhatsappHome } from "../components/Chat";
 import { Sidebar } from "../components/sidebar";
 import SocketContext from "../context/SocketContext";
-import { getConversations, sendMessage, updateMessagesAndConversations, updateStatues } from "../features/chatSlice";
+import {
+  getConversations,
+  sendMessage,
+  updateMessagesAndConversations,
+  updateStatues,
+} from "../features/chatSlice";
 
 function Home({ socket }) {
   const dispatch = useDispatch();
@@ -26,10 +31,11 @@ function Home({ socket }) {
   }, []);
   useEffect(() => {
     if (!socket.connected) socket.connect();
-    socket.emit("join", user._id);
+    const { token, ...userWithoutToken } = user;
+    socket.emit("join", userWithoutToken);
     socket.on("connect", () => {
       console.log("tekrar bağlandık");
-      socket.emit("join", user._id);
+      socket.emit("join", userWithoutToken);
     });
   }, []);
 
@@ -80,7 +86,6 @@ function Home({ socket }) {
 
   return (
     <>
-    
       <div className="h-screen w-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
         {/*container*/}
         <div className="container h-screen w-screen flex py-[19px]">

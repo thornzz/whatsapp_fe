@@ -234,15 +234,14 @@
 .css-10wo9uf-option span {
   color: #fff !important;
 }
-
-.createGroupAnimation {
+.slide-up-animation {
   animation: cga 0.5s;
 }
 @keyframes cga {
   0% {
-    width: 0;
+    transform: translateY(100%);
   }
   100% {
-    width: 100%;
+    transform: translateY(0);
   }
 }
