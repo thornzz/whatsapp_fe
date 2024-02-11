@@ -8,6 +8,7 @@ import {
   Text,
   Avatar,
   Title,
+  Indicator,
 } from "@mantine/core";
 import { useEffect } from "react";
 import { useClickOutside } from "@mantine/hooks";
@@ -51,7 +52,17 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers }) {
             >
               <Grid gutter={{ base: 1.5 }} align="center">
                 <Grid.Col span={1.2}>
-                  <Avatar src={user.user.picture} />
+                  <Indicator
+                    inline
+                    processing
+                    color="green"
+                    size={10}
+                    offset={5}
+                    position="bottom-end"
+                    withBorder
+                  >
+                    <Avatar src={user.user.picture} />
+                  </Indicator>
                 </Grid.Col>
                 <Grid.Col span={3.5}>
                   <Text>{user.user.name}</Text>
