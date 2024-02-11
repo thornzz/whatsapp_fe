@@ -86,20 +86,25 @@ function ChatHeader({ online, socket }) {
   const deleteDialog = () =>
     modals.openConfirmModal({
       title: "Sohbet sonlandırma",
+
       children: (
         <Text size="sm">
           İlgili sohbeti sonlandırma işlemine devam etmek istiyor musunuz?
         </Text>
       ),
-      confirmProps: { color: "red" },
+      confirmProps: { color: "#00A884" },
       centered: true,
       labels: { confirm: "Onayla", cancel: "İptal et" },
       onCancel: () =>
         notifications.show({
-          color: "red",
+          color: "#00A884",
           position: "bottom-center",
           title: "Sohbeti sonlandırma",
           message: "Sohbeti sonlandırma işlemi iptal edildi",
+          styles: {
+            body: { backgroundColor: "#202C33" },
+            root: { backgroundColor: "#202C33" },
+          },
         }),
       onConfirm: closeConversationHandler,
     });

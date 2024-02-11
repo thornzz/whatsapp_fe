@@ -11,6 +11,8 @@ import {
   updateMessagesAndConversations,
   updateStatues,
 } from "../features/chatSlice";
+import { logout } from "../features/userSlice";
+import { notifications } from "@mantine/notifications";
 
 function Home({ socket }) {
   const dispatch = useDispatch();
@@ -28,16 +30,19 @@ function Home({ socket }) {
       console.log(users, "get online users");
       setOnlineUsers(users);
     });
+    return () => {
+      socket.off("get-online-users");
+    };
   }, []);
   useEffect(() => {
     if (!socket.connected) socket.connect();
     const { token, ...userWithoutToken } = user;
     const userwithUserId = { userId: user._id, user: userWithoutToken };
     socket.emit("join", userwithUserId);
-    socket.on("connect", () => {
-      console.log("tekrar bağlandık");
-      socket.emit("join", userwithUserId);
-    });
+    // socket.on("connect", () => {
+    //   console.log("tekrar bağlandık");
+    //   socket.emit("join", userwithUserId);
+    // });
   }, []);
 
   //get Conversations
@@ -57,10 +62,33 @@ function Home({ socket }) {
       //console.log('receive message tetiklendi',message);
       dispatch(updateStatues(message));
     });
-    socket.on("group created", () => {
-      if (user?.token) {
-        dispatch(getConversations(user.token));
-      }
+    // socket.on("group created", () => {
+    //   if (user?.token) {
+    //     dispatch(getConversations(user.token));
+    //   }
+    // });
+    socket.on("existing_user", () => {
+      console.log("existing_user tetiklendi");
+      socket.emit("logout", { ...user, socketId: socket.id });
+      socket.disconnect();
+      dispatch(logout());
+      notifications.show({
+        color: "#00A884",
+        position: "center",
+        title: "Yeni oturum",
+        message: "Farklı bir yerden oturum açtınız.",
+        autoClose: 4000,
+        styles: {
+          body: { backgroundColor: "#202C33" },
+          root: { backgroundColor: "#202C33" },
+        },
+      });
+      // dispatch(updateMessagesAndConversations(message));
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnect tetiklendi");
+      socket.emit("logout", { ...user, socketId: socket.id });
+      dispatch(logout());
     });
     //listening when a user is typing
     // socket.on("typing", (conversation) => setTyping(conversation));
@@ -80,6 +108,16 @@ function Home({ socket }) {
         userId: user._id,
       });
     });
+
+    return () => {
+      // Event listener'ları kaldırın
+      socket.off("receive message");
+      socket.off("update statues");
+      socket.off("existing_user");
+      socket.off("disconnect");
+      socket.off("incoming-waba-status");
+      socket.off("incoming-waba-message");
+    };
   }, []);
 
   return (

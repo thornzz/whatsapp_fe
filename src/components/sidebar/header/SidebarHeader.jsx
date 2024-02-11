@@ -107,6 +107,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                         //socket.disconnect();
                         dispatch(setActiveConversation({}));
                         dispatch(logout());
+                        socket.emit("logout", { ...user, socketId: socket.id });
                         socket.disconnect();
                       }}
                       leftSection={

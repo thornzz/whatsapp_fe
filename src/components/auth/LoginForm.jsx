@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../features/userSlice";
-import WBLogo from '../../images/logo.png'
+import WBLogo from "../../images/logo.png";
 import SocketContext from "../../context/SocketContext";
-function LoginForm({socket}) {
+function LoginForm({ socket }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.user);
@@ -21,10 +21,10 @@ function LoginForm({socket}) {
   });
   const onSubmit = async (values) => {
     let res = await dispatch(loginUser({ ...values }));
-   
+
     if (res?.payload?.user) {
-      // socket.connect();
-      // socket.emit("join",res?.payload?.user._id);
+      socket.connect();
+      // socket.emit("join", res?.payload?.user._id);
       navigate("/");
     }
   };
@@ -34,13 +34,13 @@ function LoginForm({socket}) {
       <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
         {/*Heading*/}
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center justify-center">
-        <div className="mt-4">
-          <img src={WBLogo} alt="WB Logo" className="w-20 h-20" />
+          <div className="mt-4">
+            <img src={WBLogo} alt="WB Logo" className="w-20 h-20" />
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight dark:text-dark_text_1">
+            K2M Business Whatsapp
+          </h2>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight dark:text-dark_text_1">
-          K2M Business Whatsapp
-        </h2>
-      </div>
         {/*Form*/}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
           <AuthInput
@@ -84,7 +84,7 @@ function LoginForm({socket}) {
               to="/register"
               className=" hover:underline cursor-pointer transition ease-in duration-300"
             >
-             KAYIT OL
+              KAYIT OL
             </Link>
           </p>
         </form>
