@@ -1,4 +1,4 @@
-import { Button, rem } from "@mantine/core";
+import { Button, rem, Text, Group, Flex } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,6 +13,8 @@ import {
 } from "../features/chatSlice";
 import { logout } from "../features/userSlice";
 import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
+import { IconInfoSquareFilled } from "@tabler/icons-react";
 
 function Home({ socket }) {
   const dispatch = useDispatch();
@@ -85,6 +87,41 @@ function Home({ socket }) {
       });
       // dispatch(updateMessagesAndConversations(message));
     });
+    socket.on("notify_transfer_message", (transferrerUser) => {
+      dispatch(getConversations(user.token));
+      modals.open({
+        centered: true,
+        title: "Transfer edilen mesaj",
+        size: "md",
+        withCloseButton: false,
+
+        children: (
+          <>
+            <Flex
+              gap="xs"
+              justify="center"
+              align="center"
+              direction="row"
+              wrap="nowrap"
+            >
+              <IconInfoSquareFilled size={24} color="#00A884" />
+              <Text size="sm">
+                {transferrerUser.name} tarafından size bir sohbet transfer
+                edildi.
+              </Text>
+            </Flex>
+            <Button
+              fullWidth
+              onClick={() => modals.closeAll()}
+              mt="md"
+              color="#00A884"
+            >
+              Onayla
+            </Button>
+          </>
+        ),
+      });
+    });
     socket.on("disconnect", () => {
       console.log("disconnect tetiklendi");
       socket.emit("logout", { ...user, socketId: socket.id });
@@ -110,7 +147,7 @@ function Home({ socket }) {
     });
 
     return () => {
-      // Event listener'ları kaldırın
+      // Event listenelar kaldırılıyor
       socket.off("receive message");
       socket.off("update statues");
       socket.off("existing_user");

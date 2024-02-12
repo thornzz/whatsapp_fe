@@ -18,6 +18,7 @@ const Message = forwardRef(
       setHighlighted(false);
       dispatch(setFocusedMessage({}));
     });
+
     // ref to the parent component during rendering
     useEffect(() => {
       onRefUpdate(messageRef, index, message._id);
@@ -30,13 +31,20 @@ const Message = forwardRef(
       <>
         <div
           className={`w-full flex mt-2 space-x-3 max-w-xs ${
-            me ? "ml-auto justify-end " : ""
+            me ||
+            (message.conversation.transferred && message.sender.type !== "waba")
+              ? "ml-auto justify-end "
+              : !me &&
+                message.conversation.transferred &&
+                !message.sender.type !== "waba"
+              ? "justify-start "
+              : ""
           }`}
         >
           {/*Message Container*/}
           <div className="relative">
-            {/* sender user message */}
-            {!me && message.conversation.isGroup && (
+            {/* sender user pic if its a transferred msg */}
+            {!me && message.conversation.transferred && (
               <div className="absolute top-0.5 left-[-37px]">
                 <img
                   src={message.sender.picture}
@@ -96,7 +104,10 @@ const Message = forwardRef(
         {/*Message Date*/}
         <div
           className={`text-xs mt-2 text-dark_text_5 leading-none ${
-            me ? "text-right" : ""
+            me ||
+            (message.conversation.transferred && message.sender.type !== "waba")
+              ? "text-right"
+              : ""
           }`}
         >
           {message.conversation.closed

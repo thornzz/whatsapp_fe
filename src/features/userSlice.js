@@ -13,8 +13,9 @@ const initialState = {
     picture: "",
     status: "",
     token: "",
-    phonenumber:""
+    phonenumber: "",
   },
+  onlineUsers: {},
 };
 
 export const registerUser = createAsyncThunk(
@@ -26,7 +27,6 @@ export const registerUser = createAsyncThunk(
       });
       return data;
     } catch (error) {
-      
       return rejectWithValue(error.response.data.error.message);
     }
   }
@@ -59,7 +59,7 @@ export const userSlice = createSlice({
         picture: "",
         status: "",
         token: "",
-        phonenumber:""
+        phonenumber: "",
       };
     },
     changeStatus: (state, action) => {
