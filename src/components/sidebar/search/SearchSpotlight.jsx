@@ -106,7 +106,11 @@ function SearchSpotlight() {
 
     return (
       <>
-        <Spotlight.Root query={query} onQueryChange={setQuery}>
+        <Spotlight.Root
+          query={query}
+          onQueryChange={setQuery}
+          shortcut={["mod + K", "mod + P", "/"]}
+        >
           <Spotlight.Search
             placeholder="Kişi ara..."
             leftSection={<IconSearch stroke={1.5} />}

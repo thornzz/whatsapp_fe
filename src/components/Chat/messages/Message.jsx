@@ -1,24 +1,24 @@
+import { Divider, Mark } from "@mantine/core";
+import { useClickOutside } from "@mantine/hooks";
 import moment from "moment";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { MdDone, MdOutlineDoneAll, MdSmsFailed } from "react-icons/md";
-import { Mark } from "@mantine/core";
-import { useClickOutside } from "@mantine/hooks";
-import TraingleIcon from "../../../svg/triangle";
 import { useDispatch } from "react-redux";
+
 import { setFocusedMessage } from "../../../features/chatSlice";
+import TraingleIcon from "../../../svg/triangle";
 
 const Message = forwardRef(
-  ({ message, me, index, onRefUpdate, focusedMessage }, ref) => {
+  ({ message, me, index, user, onRefUpdate, focusedMessage }, ref) => {
     const messageRef = useRef();
     const dispatch = useDispatch();
     const isFocusedMessage = message?._id === focusedMessage?._id;
     const [isHighlighted, setHighlighted] = useState(false);
-
+    console.log(message);
     const clickOutSideRef = useClickOutside(() => {
       setHighlighted(false);
       dispatch(setFocusedMessage({}));
     });
-
     // ref to the parent component during rendering
     useEffect(() => {
       onRefUpdate(messageRef, index, message._id);
@@ -27,6 +27,41 @@ const Message = forwardRef(
     useEffect(() => {
       setHighlighted(true);
     }, [focusedMessage]);
+
+    function shouldShowAvatar(message, user) {
+      if (!message.conversation.transferred) return false;
+      const transferIndex = message.conversation.transfers.findIndex(
+        (transfer) =>
+          transfer.to === user._id &&
+          new Date(message.createdAt) > new Date(transfer.at)
+      );
+      if (transferIndex > -1) {
+        return false;
+      }
+      return true;
+    }
+
+    function addTransferMessageDivider(message) {
+      const transfers = message.conversation.transfers;
+      const isTransferMessage = transfers?.some(
+        (transfer) => transfer.latestMessageBeforeTransfer === message._id
+      );
+
+      if (isTransferMessage) {
+        return (
+          <Divider
+            my="xs"
+            variant="dashed"
+            label={`${message.sender.name} tarafından transfer edilen mesaj`}
+            labelPosition="center"
+            color="#7c7c7c"
+            style={{ fontStyle: "italic" }}
+          />
+        );
+      }
+      return null;
+    }
+
     return (
       <>
         <div
@@ -44,15 +79,19 @@ const Message = forwardRef(
           {/*Message Container*/}
           <div className="relative">
             {/* sender user pic if its a transferred msg */}
-            {!me && message.conversation.transferred && (
-              <div className="absolute top-0.5 left-[-37px]">
-                <img
-                  src={message.sender.picture}
-                  alt=""
-                  className="w-8 h-8 rounded-full"
-                />
-              </div>
-            )}
+            {/* new Date(message.createdAt) <= new Date(lastTransfer.at) */}
+            {!me &&
+              message.conversation.transferred &&
+              shouldShowAvatar(message, user) && (
+                <div className="absolute top-0.5 left-[-37px]">
+                  <img
+                    src={message.sender.picture}
+                    alt=""
+                    className="w-8 h-8 rounded-full"
+                  />
+                </div>
+              )}
+
             <div
               className={`relative h-full dark:text-dark_text_1 p-2 rounded-lg ${
                 me ? "bg-green_3" : "dark:bg-dark_bg_2"
@@ -75,7 +114,6 @@ const Message = forwardRef(
                 ) : (
                   message.message
                 )}
-
                 {/*Message Status*/}
                 {me && (
                   <span className="absolute bottom-0 right-1 text-xs text-dark_text_5 leading-none">
@@ -101,6 +139,7 @@ const Message = forwardRef(
             </div>
           </div>
         </div>
+
         {/*Message Date*/}
         <div
           className={`text-xs mt-2 text-dark_text_5 leading-none ${
@@ -114,6 +153,7 @@ const Message = forwardRef(
             ? moment(message.createdAt).format("DD.MM.YYYY HH:mm")
             : moment(message.createdAt).format("HH:mm")}
         </div>
+        {addTransferMessageDivider(message)}
       </>
     );
   }

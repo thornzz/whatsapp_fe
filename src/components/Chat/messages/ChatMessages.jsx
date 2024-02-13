@@ -85,6 +85,7 @@ export default function ChatMessages({ typing }) {
                   me={user._id === message.sender._id}
                   onRefUpdate={handleMessageRef}
                   focusedMessage={focusedMessage}
+                  user={user}
                 />
               ) : null}
             </React.Fragment>
