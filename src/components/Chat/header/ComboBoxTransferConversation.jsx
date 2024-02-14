@@ -1,24 +1,13 @@
-import {
-  Combobox,
-  Group,
-  Indicator,
-  Text,
-  Avatar,
-  useCombobox,
-  ActionIcon,
-  ScrollArea,
-} from "@mantine/core";
-import classes from "./ComboBox.module.css";
-import { IconTransfer } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Combobox, Group, Indicator, ScrollArea, Text, useCombobox } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import { IconTransfer } from "@tabler/icons-react";
+import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { modals } from "@mantine/modals";
-import axios from "axios";
-import {
-  getConversations,
-  setActiveConversation,
-} from "../../../features/chatSlice";
+
+import { getConversations, setActiveConversation } from "../../../features/chatSlice";
+import classes from "./ComboBox.module.css";
 
 function ComboBoxTransferConversation({ onlineUsers, socket }) {
   const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;

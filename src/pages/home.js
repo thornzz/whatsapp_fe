@@ -1,5 +1,5 @@
-import { Button, rem, Text, Group, Flex } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { Button, Text, Flex } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ChatContainer, WhatsappHome } from "../components/Chat";
@@ -7,7 +7,6 @@ import { Sidebar } from "../components/sidebar";
 import SocketContext from "../context/SocketContext";
 import {
   getConversations,
-  sendMessage,
   updateMessagesAndConversations,
   updateStatues,
 } from "../features/chatSlice";
@@ -159,6 +158,20 @@ function Home({ socket }) {
 
   return (
     <>
+      {/* <Spotlight
+        nothingFound="Nothing found..."
+        actions={actions}
+        highlightQuery
+        searchProps={{
+          leftSection: (
+            <IconSearch
+              style={{ width: rem(20), height: rem(20) }}
+              stroke={1.5}
+            />
+          ),
+          placeholder: "Search...",
+        }}
+      /> */}
       <div className="h-screen w-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
         {/*container*/}
         <div className="container h-screen w-screen flex py-[19px]">

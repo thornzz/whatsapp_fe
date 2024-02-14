@@ -30,6 +30,9 @@ module.exports = {
         green_5: "#64db6f",
       },
     },
+    fontFamily: {
+      roboto: ["Roboto", "sans-serif"],
+    },
   },
   plugins: [],
 };

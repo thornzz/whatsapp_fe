@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import { FilterIcon, ReturnIcon, SearchIcon } from "../../../svg";
 import SearchSpotlight from "./SearchSpotlight";
+import { spotlight } from "@mantine/spotlight";
 
 export default function Search({ searchLength, setSearchResults }) {
   const { user } = useSelector((state) => state.user);
@@ -62,6 +63,7 @@ export default function Search({ searchLength, setSearchResults }) {
                 onKeyDown={(e) => handleSearch(e)}
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                onClick={() => spotlight.open()}
               />
             </div>
             {/* <button className="btn">

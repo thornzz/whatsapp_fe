@@ -1,3 +1,4 @@
+import { Flex, Text } from "@mantine/core";
 import { useSelector } from "react-redux";
 
 //import { checkOnlineStatus, getConversationId } from "../../../utils/chat";
@@ -30,6 +31,15 @@ export default function Conversations({ onlineUsers, typing }) {
                 />
               );
             })}
+        {conversations.length === 0 && (
+          <>
+            <Flex justify="center" mt={5}>
+              <Text tt="uppercase" style={{ fontStyle: "italic" }} size="xs">
+                Dahil olduğunuz aktif bir sohbet bulunmuyor.
+              </Text>
+            </Flex>
+          </>
+        )}
       </ul>
     </div>
   );

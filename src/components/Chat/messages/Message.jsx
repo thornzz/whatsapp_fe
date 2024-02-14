@@ -41,18 +41,21 @@ const Message = forwardRef(
       return true;
     }
 
-    function addTransferMessageDivider(message) {
+    function addTransferMessageDivider(message, isFirst) {
       const transfers = message.conversation.transfers;
-      const isTransferMessage = transfers?.some(
-        (transfer) => transfer.latestMessageBeforeTransfer === message._id
+      const isTransferMessage = transfers?.some((transfer) =>
+        isFirst
+          ? transfer.firstMessageBeforeTransfer === message._id
+          : transfer.latestMessageBeforeTransfer === message._id
       );
-
       if (isTransferMessage) {
         return (
           <Divider
             my="xs"
             variant="dashed"
-            label={`${message.sender.name} tarafından transfer edilen mesaj`}
+            label={`${message.sender.name} tarafından transfer edilen mesaj ${
+              isFirst ? "başlangıcı" : "sonu"
+            }`}
             labelPosition="center"
             color="#7c7c7c"
             style={{ fontStyle: "italic" }}
@@ -64,6 +67,7 @@ const Message = forwardRef(
 
     return (
       <>
+        {addTransferMessageDivider(message, true)}
         <div
           className={`w-full flex mt-2 space-x-3 max-w-xs ${
             me ||
@@ -153,7 +157,7 @@ const Message = forwardRef(
             ? moment(message.createdAt).format("DD.MM.YYYY HH:mm")
             : moment(message.createdAt).format("HH:mm")}
         </div>
-        {addTransferMessageDivider(message)}
+        {addTransferMessageDivider(message, false)}
       </>
     );
   }

@@ -13,6 +13,7 @@ import { ChatActions } from "./actions";
 import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import FilesPreview from "./preview/files/FilesPreview";
+import { spotlight } from "@mantine/spotlight";
 
 export default function ChatContainer({ onlineUsers, typing, callUser }) {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     function () {
       function callback(e) {
         if (e.code === "Escape") {
+          spotlight.open();
           dispatch(setActiveConversation({}));
         }
       }
