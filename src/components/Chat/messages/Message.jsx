@@ -14,7 +14,7 @@ const Message = forwardRef(
     const dispatch = useDispatch();
     const isFocusedMessage = message?._id === focusedMessage?._id;
     const [isHighlighted, setHighlighted] = useState(false);
-    console.log(message);
+
     const clickOutSideRef = useClickOutside(() => {
       setHighlighted(false);
       dispatch(setFocusedMessage({}));
@@ -30,12 +30,14 @@ const Message = forwardRef(
 
     function shouldShowAvatar(message, user) {
       if (!message.conversation.transferred) return false;
-      const transferIndex = message.conversation.transfers.findIndex(
+      const transferFilter = message.conversation.transfers.filter(
         (transfer) =>
-          transfer.to === user._id &&
-          new Date(message.createdAt) > new Date(transfer.at)
+          (transfer.to._id === user._id &&
+            new Date(message.createdAt) > new Date(transfer.at)) ||
+          (transfer.from._id === user._id &&
+            new Date(message.createdAt) < new Date(transfer.at))
       );
-      if (transferIndex > -1) {
+      if (transferFilter.length > 0) {
         return false;
       }
       return true;
@@ -43,17 +45,20 @@ const Message = forwardRef(
 
     function addTransferMessageDivider(message, isFirst) {
       const transfers = message.conversation.transfers;
-      const isTransferMessage = transfers?.some((transfer) =>
+      const isTransferMessage = transfers?.filter((transfer) =>
         isFirst
           ? transfer.firstMessageBeforeTransfer === message._id
           : transfer.latestMessageBeforeTransfer === message._id
       );
-      if (isTransferMessage) {
+      if (isTransferMessage && isTransferMessage?.length > 0) {
+        if (isTransferMessage[0]?.from._id === user._id) return null;
         return (
           <Divider
             my="xs"
             variant="dashed"
-            label={`${message.sender.name} tarafından transfer edilen mesaj ${
+            label={`${
+              isTransferMessage[0].from.name
+            } tarafından transfer edilen mesaj ${
               isFirst ? "başlangıcı" : "sonu"
             }`}
             labelPosition="center"
@@ -62,7 +67,6 @@ const Message = forwardRef(
           />
         );
       }
-      return null;
     }
 
     return (
