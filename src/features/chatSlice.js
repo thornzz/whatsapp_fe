@@ -177,7 +177,7 @@ export const chatSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(sendMessage.pending, (state, action) => {
-        //state.status = "loading";
+        state.status = "pending";
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.status = "succeeded";

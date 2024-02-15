@@ -28,20 +28,20 @@ const Message = forwardRef(
       setHighlighted(true);
     }, [focusedMessage]);
 
-    function shouldShowAvatar(message, user) {
-      if (!message.conversation.transferred) return false;
-      const transferFilter = message.conversation.transfers.filter(
-        (transfer) =>
-          (transfer.to._id === user._id &&
-            new Date(message.createdAt) > new Date(transfer.at)) ||
-          (transfer.from._id === user._id &&
-            new Date(message.createdAt) < new Date(transfer.at))
-      );
-      if (transferFilter.length > 0) {
-        return false;
-      }
-      return true;
-    }
+    // function shouldShowAvatar(message, user) {
+    //   if (!message.conversation.transferred) return false;
+    //   console.log(message, "message");
+    //   const transferFilter = message.conversation.transfers.filter(
+    //     (transfer) =>
+    //       transfer.to._id === user._id &&
+    //       new Date(message.createdAt) > new Date(transfer.at)
+    //   );
+    //   console.log(transferFilter, "transferFilter");
+    //   if (transferFilter.length > 0) {
+    //     return false;
+    //   }
+    //   return true;
+    // }
 
     function addTransferMessageDivider(message, isFirst) {
       const transfers = message.conversation.transfers;
@@ -88,7 +88,7 @@ const Message = forwardRef(
           <div className="relative">
             {/* sender user pic if its a transferred msg */}
             {/* new Date(message.createdAt) <= new Date(lastTransfer.at) */}
-            {!me &&
+            {/* {!me &&
               message.conversation.transferred &&
               shouldShowAvatar(message, user) && (
                 <div className="absolute top-0.5 left-[-37px]">
@@ -98,7 +98,7 @@ const Message = forwardRef(
                     className="w-8 h-8 rounded-full"
                   />
                 </div>
-              )}
+              )} */}
 
             <div
               className={`relative h-full dark:text-dark_text_1 p-2 rounded-lg ${

@@ -68,7 +68,7 @@ function ChatActions({ socket }) {
         <Input message={message} setMessage={setMessage} textRef={textRef} />
         {/*Send button*/}
         <button type="submit" className="btn">
-          {status === "loading" && loading ? (
+          {status === "pending" && loading ? (
             <ClipLoader color="#E9EDEF" size={25} />
           ) : (
             <SendIcon className="dark:fill-dark_svg_1" />
