@@ -1,4 +1,7 @@
-import { Button, Text, Flex } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
+import { IconInfoSquareFilled } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,9 +14,6 @@ import {
   updateStatues,
 } from "../features/chatSlice";
 import { logout } from "../features/userSlice";
-import { notifications } from "@mantine/notifications";
-import { modals } from "@mantine/modals";
-import { IconInfoSquareFilled } from "@tabler/icons-react";
 
 function Home({ socket }) {
   const dispatch = useDispatch();
@@ -56,7 +56,6 @@ function Home({ socket }) {
   useEffect(() => {
     //lsitening to receiving a message
     socket.on("receive message", (message, userId) => {
-      //console.log(message);
       dispatch(updateMessagesAndConversations(message));
     });
     socket.on("update statues", (message) => {

@@ -1,19 +1,15 @@
 import { LoadingOverlay } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { spotlight } from "@mantine/spotlight";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  getClosedConversationMessages,
-  getConversationMessages,
-  setActiveConversation,
-} from "../../features/chatSlice";
+import { getClosedConversationMessages, getConversationMessages, setActiveConversation } from "../../features/chatSlice";
 import { checkOnlineStatus } from "../../utils/chat";
 import { ChatActions } from "./actions";
 import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import FilesPreview from "./preview/files/FilesPreview";
-import { spotlight } from "@mantine/spotlight";
 
 export default function ChatContainer({ onlineUsers, typing, callUser }) {
   const dispatch = useDispatch();
@@ -51,7 +47,6 @@ export default function ChatContainer({ onlineUsers, typing, callUser }) {
     function () {
       function callback(e) {
         if (e.code === "Escape") {
-          spotlight.open();
           dispatch(setActiveConversation({}));
         }
       }

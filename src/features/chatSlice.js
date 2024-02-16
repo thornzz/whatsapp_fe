@@ -13,12 +13,19 @@ const initialState = {
   focusedMessage: {},
   notifications: [],
   files: [],
+  //unreadConvosCount: 0,
 };
 
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    increaseUnreadConvosCount: (state) => {
+      state.unreadConvosCount += 1;
+    },
+    decreaseUnreadConvosCount: (state) => {
+      state.unreadConvosCount -= 1;
+    },
     setActiveConversation: (state, action) => {
       state.activeConversation = action.payload;
     },
@@ -32,6 +39,16 @@ export const chatSlice = createSlice({
       state.conversations = removedConversations;
     },
     updateMessagesAndConversations: (state, action) => {
+      // Play notification sound if the conversation is not active
+      if (
+        Object.keys(state.activeConversation).length === 0 ||
+        (Object.keys(state.activeConversation).length > 0 &&
+          state.activeConversation.closed)
+      ) {
+        let audio = new Audio(require("../sounds/notify.mp3"));
+        audio.play();
+      }
+
       // Update messages
       let convo = state.activeConversation;
 
