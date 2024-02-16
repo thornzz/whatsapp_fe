@@ -13,11 +13,12 @@ import {
 import { useEffect } from "react";
 import { useClickOutside } from "@mantine/hooks";
 
-function OnlineUsers({ setShowOnlineUsers, onlineUsers }) {
-  const clickOutSideRef = useClickOutside(() => setShowOnlineUsers(false));
-  useEffect(() => {
-    console.log(onlineUsers);
-  }, [onlineUsers]);
+function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
+  const clickOutSideRef = useClickOutside(() => {
+    setShowOnlineUsers(false);
+    setSelectedAction("");
+  });
+
   return (
     <div
       ref={clickOutSideRef}
@@ -30,7 +31,10 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers }) {
           size={30}
           color="gray"
           aria-label="Online Users"
-          onClick={() => setShowOnlineUsers(false)}
+          onClick={() => {
+            setShowOnlineUsers(false);
+            setSelectedAction("");
+          }}
         >
           <IconArrowBack
             size={12}

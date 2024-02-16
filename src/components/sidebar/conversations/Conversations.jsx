@@ -35,7 +35,7 @@ export default function Conversations({ onlineUsers, typing }) {
           <>
             <Flex justify="center" mt={5}>
               <Text tt="uppercase" style={{ fontStyle: "italic" }} size="xs">
-                Dahil olduğunuz aktif bir sohbet bulunmuyor.
+                Dahil olduğunuz bir sohbet bulunmuyor.
               </Text>
             </Flex>
           </>

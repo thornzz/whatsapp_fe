@@ -26,7 +26,6 @@ function ChatHeader({ socket, onlineUsers }) {
     convo_id: activeConversation?._id,
     token,
   };
-
   const deleteDialog = () =>
     modals.openConfirmModal({
       title: "Sohbet sonlandırma",
@@ -120,12 +119,16 @@ function ChatHeader({ socket, onlineUsers }) {
             <li>
               <ComboBoxSearchMessage />
             </li>
-            <li>
-              <ComboBoxTransferConversation
-                onlineUsers={onlineUsers}
-                socket={socket}
-              />
-            </li>
+            {/* Hide if an closed conversation*/}
+            {!activeConversation.closed && (
+              <li>
+                <ComboBoxTransferConversation
+                  onlineUsers={onlineUsers}
+                  socket={socket}
+                />
+              </li>
+            )}
+
             <li>
               <Menu
                 position="left-start"

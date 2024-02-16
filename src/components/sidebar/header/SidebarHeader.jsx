@@ -1,5 +1,11 @@
 import { Menu, rem, ActionIcon, Avatar } from "@mantine/core";
-import { IconLogout, IconUsers, IconSettings } from "@tabler/icons-react";
+import {
+  IconLogout,
+  IconUsers,
+  IconSettings,
+  IconMessageOff,
+  IconMessage,
+} from "@tabler/icons-react";
 import { MdHistory } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -17,10 +23,12 @@ export default function SidebarHeader({ onlineUsers, socket }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
+  const [selectedAction, setSelectedAction] = useState("open");
   const handleOpenConversations = async () => {
     if (user?.token) {
       dispatch(getConversations(user.token));
       dispatch(setActiveConversation({}));
+      setSelectedAction("open");
     }
   };
 
@@ -29,6 +37,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
       const values = { token: user.token, closed: true };
       dispatch(getClosedConversations(values));
       dispatch(setActiveConversation({}));
+      setSelectedAction("closed");
     }
   };
 
@@ -42,11 +51,15 @@ export default function SidebarHeader({ onlineUsers, socket }) {
           <Avatar src={user.picture} alt={user.name} />
           {/*online users*/}
           <ActionIcon
-            variant="subtle"
+            variant={selectedAction === "users" ? "filled" : "subtle"}
             size={30}
-            color="gray"
+            radius={"md"}
+            gradient={{ from: "blue", to: "cyan", deg: 90 }}
             aria-label="Online Users"
-            onClick={() => setShowOnlineUsers(true)}
+            onClick={() => {
+              setShowOnlineUsers(true);
+              setSelectedAction("users");
+            }}
           >
             <IconUsers
               size={24}
@@ -59,15 +72,40 @@ export default function SidebarHeader({ onlineUsers, socket }) {
           <div className="w-full flex items-center justify-end">
             {/*user icons*/}
             <ul className="flex items-center gap-x-2 5">
-              <li onClick={handleOpenConversations}>
-                <button className="btn">
-                  <ChatIcon className="dark:fill-dark_svg_1" />
-                </button>
+              <li>
+                <ActionIcon
+                  variant={selectedAction === "open" ? "filled" : "subtle"}
+                  size={30}
+                  radius="md"
+                  color="green"
+                  aria-label="Online Users"
+                  onClick={handleOpenConversations}
+                >
+                  <IconMessage
+                    size={24}
+                    color="#AEBAC1"
+                    style={{ width: "100%", height: "100%" }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
               </li>
-              <li onClick={handleClosedConversations}>
-                <button className="btn">
-                  <MdHistory className="dark:fill-dark_svg_1 h-6 w-6" />
-                </button>
+
+              <li>
+                <ActionIcon
+                  variant={selectedAction === "closed" ? "filled" : "subtle"}
+                  size={30}
+                  radius="md"
+                  color="pink"
+                  aria-label="Online Users"
+                  onClick={handleClosedConversations}
+                >
+                  <IconMessageOff
+                    size={24}
+                    color="#AEBAC1"
+                    style={{ width: "100%", height: "100%" }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
               </li>
               <li>
                 <Menu
@@ -129,6 +167,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
         <OnlineUsers
           setShowOnlineUsers={setShowOnlineUsers}
           onlineUsers={onlineUsers}
+          setSelectedAction={setSelectedAction}
         />
       )}
     </>
