@@ -4,6 +4,12 @@ export const getFileType = (memType) => {
       return "TXT";
     case "application/pdf":
       return "PDF";
+    case "image/png":
+      return "PNG";
+    case "image/jpeg":
+      return "JPEG";
+    case "image/jpg":
+      return "JPG";
     case "application/msword":
     case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
       return "DOCX";
