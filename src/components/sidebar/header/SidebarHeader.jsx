@@ -1,25 +1,18 @@
-import { Menu, rem, ActionIcon, Avatar } from "@mantine/core";
-import {
-  IconLogout,
-  IconUsers,
-  IconSettings,
-  IconMessageOff,
-  IconMessage,
-} from "@tabler/icons-react";
+import { ActionIcon, Avatar, Menu, rem } from "@mantine/core";
+import { IconLogout, IconMessage, IconMessageOff, IconSettings, IconUsers } from "@tabler/icons-react";
+import { useState } from "react";
 import { MdHistory } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import {
-  getClosedConversations,
-  getConversations,
-  setActiveConversation,
-} from "../../../features/chatSlice";
+
+import { getClosedConversations, getConversations, setActiveConversation } from "../../../features/chatSlice";
 import { logout } from "../../../features/userSlice";
 import { ChatIcon, DotsIcon } from "../../../svg";
 import OnlineUsers from "./OnlineUsers";
+
 // import { CreateGroup } from "../header/createGroup/index.js";
 
 export default function SidebarHeader({ onlineUsers, socket }) {
+  
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);

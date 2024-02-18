@@ -7,12 +7,14 @@ const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
 const initialState = {
   status: "",
   error: "",
+  activeConvoWindow: "open",
   conversations: [],
   activeConversation: {},
   messages: [],
   focusedMessage: {},
   notifications: [],
   files: [],
+
   //unreadConvosCount: 0,
 };
 
@@ -48,6 +50,9 @@ export const chatSlice = createSlice({
         let audio = new Audio(require("../sounds/notify.mp3"));
         audio.play();
       }
+
+      //closed message penceresi açık ise yeni mesajları gösterme
+      if (state.activeConvoWindow === "closed") return;
 
       // Update messages
       let convo = state.activeConversation;
@@ -120,6 +125,7 @@ export const chatSlice = createSlice({
       .addCase(getConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.conversations = action.payload;
+        state.activeConvoWindow = "open";
       })
       .addCase(getConversations.rejected, (state, action) => {
         state.status = "failed";
@@ -131,6 +137,7 @@ export const chatSlice = createSlice({
       .addCase(getClosedConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.conversations = action.payload;
+        state.activeConvoWindow = "closed";
       })
       .addCase(getClosedConversations.rejected, (state, action) => {
         state.status = "failed";
@@ -142,6 +149,7 @@ export const chatSlice = createSlice({
       .addCase(getUserConversations.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.conversations = action.payload;
+        state.activeConvoWindow = "open";
       })
       .addCase(getUserConversations.rejected, (state, action) => {
         state.status = "failed";
@@ -186,7 +194,6 @@ export const chatSlice = createSlice({
       })
       .addCase(getClosedConversationMessages.fulfilled, (state, action) => {
         state.status = "succeeded";
-
         state.messages = action.payload;
       })
       .addCase(getClosedConversationMessages.rejected, (state, action) => {

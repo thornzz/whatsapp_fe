@@ -1,21 +1,19 @@
-import { Center, Group, Text, rem } from "@mantine/core";
-import { Spotlight, spotlight } from "@mantine/spotlight";
+import { Center, Group, rem, Text } from "@mantine/core";
+import { spotlight, Spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import {
-  getUserConversations,
-  setActiveConversation,
-} from "../../../features/chatSlice";
+import { getUserConversations, setActiveConversation } from "../../../features/chatSlice";
+import { logout } from "../../../features/userSlice";
 
 function SearchSpotlight() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const dispatch = useDispatch();
-  const { user, logout } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { token } = user;
 
   useEffect(() => {
