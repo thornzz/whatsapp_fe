@@ -1,20 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const AUTH_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/auth`;
+import { axiosPrivate } from "../utils/axiosprivate";
 
 const initialState = {
   status: "",
   error: "",
-  user: {
-    id: "",
-    name: "",
-    email: "",
-    picture: "",
-    status: "",
-    token: "",
-    phonenumber: "",
-  },
+  user: {},
   onlineUsers: {},
 };
 
@@ -22,7 +12,7 @@ export const registerUser = createAsyncThunk(
   "auth/register",
   async (values, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${AUTH_ENDPOINT}/register`, {
+      const { data } = await axiosPrivate.post(`/auth/register`, {
         ...values,
       });
       return data;
@@ -35,9 +25,10 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (values, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${AUTH_ENDPOINT}/login`, {
+      const { data } = await axiosPrivate.post(`/auth/login`, {
         ...values,
       });
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -52,15 +43,7 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.status = "";
       state.error = "";
-      state.user = {
-        id: "",
-        name: "",
-        email: "",
-        picture: "",
-        status: "",
-        token: "",
-        phonenumber: "",
-      };
+      state.user = undefined;
     },
     changeStatus: (state, action) => {
       state.status = action.payload;
@@ -86,7 +69,7 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.error = "";
-        state.user = action.payload.user;
+        state.user = { ...action.payload.user };
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";

@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-
-import SocketContext from "../../../context/SocketContext";
 import { setActiveConversation } from "../../../features/chatSlice";
 import { logout } from "../../../features/userSlice";
 
-function Menu({ setShowCreateGroup, socket }) {
+export default function Menu() {
   const dispatch = useDispatch();
+
   return (
     <>
       <div className="absolute right-1 z-50 dark:bg-dark_bg_2 dark:text-dark_text_1 shadow-md w-52">
@@ -24,7 +22,7 @@ function Menu({ setShowCreateGroup, socket }) {
           <li
             className="py-3 pl-5 cursor-pointer hover:bg-dark_bg_3"
             onClick={() => {
-              // socket.disconnect();
+              //socket.disconnect();
               dispatch(setActiveConversation({}));
               dispatch(logout());
             }}
@@ -36,10 +34,3 @@ function Menu({ setShowCreateGroup, socket }) {
     </>
   );
 }
-const MenuWithContext = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <Menu {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-
-export default MenuWithContext;

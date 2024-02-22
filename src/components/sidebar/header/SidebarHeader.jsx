@@ -1,36 +1,59 @@
 import { ActionIcon, Avatar, Menu, rem } from "@mantine/core";
-import { IconLogout, IconMessage, IconMessageOff, IconSettings, IconUsers } from "@tabler/icons-react";
+import {
+  IconLogout,
+  IconMessage,
+  IconMessageOff,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react";
 import { useState } from "react";
-import { MdHistory } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getClosedConversations, getConversations, setActiveConversation } from "../../../features/chatSlice";
+import {
+  getClosedConversations,
+  getConversations,
+  setActiveConversation,
+} from "../../../features/chatSlice";
 import { logout } from "../../../features/userSlice";
-import { ChatIcon, DotsIcon } from "../../../svg";
+import { DotsIcon } from "../../../svg";
 import OnlineUsers from "./OnlineUsers";
 
-// import { CreateGroup } from "../header/createGroup/index.js";
-
 export default function SidebarHeader({ onlineUsers, socket }) {
-  
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
-  const [selectedAction, setSelectedAction] = useState("open");
+  const [selectedAction, setSelectedAction] = useState({
+    current: "open",
+    previous: "",
+  });
   const handleOpenConversations = async () => {
-    if (user?.token) {
-      dispatch(getConversations(user.token));
+    if (user) {
+      try {
+        dispatch(getConversations());
+      } catch (error) {
+        console.error("Error in getting conversations:", error);
+      }
       dispatch(setActiveConversation({}));
-      setSelectedAction("open");
+      setSelectedAction((prev) => ({
+        current: "open",
+        previous: prev.current,
+      }));
     }
   };
 
   const handleClosedConversations = async () => {
-    if (user?.token) {
+    if (user) {
       const values = { token: user.token, closed: true };
-      dispatch(getClosedConversations(values));
+      try {
+        dispatch(getClosedConversations(values));
+      } catch (error) {
+        console.error("Error in getting closed conversations:", error);
+      }
       dispatch(setActiveConversation({}));
-      setSelectedAction("closed");
+      setSelectedAction((prev) => ({
+        current: "closed",
+        previous: prev.current,
+      }));
     }
   };
 
@@ -44,14 +67,17 @@ export default function SidebarHeader({ onlineUsers, socket }) {
           <Avatar src={user.picture} alt={user.name} />
           {/*online users*/}
           <ActionIcon
-            variant={selectedAction === "users" ? "filled" : "subtle"}
+            variant={selectedAction.current === "users" ? "filled" : "subtle"}
             size={30}
             radius={"md"}
             gradient={{ from: "blue", to: "cyan", deg: 90 }}
             aria-label="Online Users"
             onClick={() => {
               setShowOnlineUsers(true);
-              setSelectedAction("users");
+              setSelectedAction((prev) => ({
+                current: "users",
+                previous: prev.current,
+              }));
             }}
           >
             <IconUsers
@@ -67,7 +93,9 @@ export default function SidebarHeader({ onlineUsers, socket }) {
             <ul className="flex items-center gap-x-2 5">
               <li>
                 <ActionIcon
-                  variant={selectedAction === "open" ? "filled" : "subtle"}
+                  variant={
+                    selectedAction.current === "open" ? "filled" : "subtle"
+                  }
                   size={30}
                   radius="md"
                   color="green"
@@ -85,7 +113,9 @@ export default function SidebarHeader({ onlineUsers, socket }) {
 
               <li>
                 <ActionIcon
-                  variant={selectedAction === "closed" ? "filled" : "subtle"}
+                  variant={
+                    selectedAction.current === "closed" ? "filled" : "subtle"
+                  }
                   size={30}
                   radius="md"
                   color="pink"
@@ -117,7 +147,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                   }}
                 >
                   <Menu.Target>
-                    <button className="btn">
+                    <button className="btn" aria-label="More Options">
                       <DotsIcon className="dark:fill-dark_svg_1" />
                     </button>
                   </Menu.Target>
@@ -138,6 +168,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                         //socket.disconnect();
                         dispatch(setActiveConversation({}));
                         dispatch(logout());
+
                         socket.emit("logout", { ...user, socketId: socket.id });
                         socket.disconnect();
                       }}

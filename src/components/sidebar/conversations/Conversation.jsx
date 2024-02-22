@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import SocketContext from "../../../context/SocketContext";
+import { useSocketContext } from "../../../context/SocketProvider";
 import { open_create_conversation } from "../../../features/chatSlice";
 import {
   getConversationId,
@@ -10,35 +10,67 @@ import { dateHandler } from "../../../utils/date";
 import { capitalize } from "../../../utils/string";
 import { IconMessageOff } from "@tabler/icons-react";
 
-function Conversation({ convo, socket, online, typing }) {
+export default function Conversation({ convo, online }) {
   const dispatch = useDispatch();
+  const socket = useSocketContext();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
-  const { token } = user;
-  const values = {
-    receiver_id: getConversationId(user, convo.users),
-    isGroup: convo.isGroup ? convo._id : false,
-    token,
-    closed: convo.closed,
-  };
+
   const openConversation = async () => {
-    let newConvo = await dispatch(open_create_conversation(values));
+    const values = {
+      receiver_id: getConversationId(user, convo.users),
+      isGroup: convo.isGroup ? convo._id : false,
+      token: user.token,
+      closed: convo.closed,
+    };
+    const newConvo = await dispatch(open_create_conversation(values));
     socket.emit("join conversation", newConvo.payload._id);
   };
+
+  const getLatestMessage = () => {
+    const { latestMessage } = convo;
+    if (latestMessage.files.length > 0) {
+      if (latestMessage.type === "cloudinary") {
+        return (
+          latestMessage.files[0].file.original_filename +
+          "." +
+          latestMessage.files[0].type.toLowerCase()
+        );
+      } else if (
+        latestMessage.type === "waba" &&
+        latestMessage.files[0].file.type === "document"
+      ) {
+        return latestMessage.files[0].file.filename;
+      } else if (
+        latestMessage.type === "waba" &&
+        latestMessage.files[0].file.type === "image"
+      ) {
+        return "[Resim dosyası]";
+      }
+    }
+    return latestMessage?.message.length > 25
+      ? `${latestMessage?.message.substring(0, 25)}...`
+      : latestMessage?.message;
+  };
+
+  const isActive = convo._id === activeConversation._id;
+  const isClosed = convo.closed;
+  const latestMessage = getLatestMessage();
+  const conversationName = convo.isGroup
+    ? convo.name
+    : capitalize(getConversationName(user, convo.users));
+
   return (
     <li
-      onClick={() => openConversation()}
+      onClick={openConversation}
       className={`list-none h-[72px] w-full dark:bg-dark_bg_1 hover:${
-        convo._id !== activeConversation._id ? "dark:bg-dark_bg_2" : ""
+        !isActive ? "dark:bg-dark_bg_2" : ""
       } cursor-pointer dark:text-dark_text_1 px-[10px] ${
-        convo._id === activeConversation._id ? "dark:bg-dark_hover_1" : ""
+        isActive ? "dark:bg-dark_hover_1" : ""
       }`}
     >
-      {/*Container */}
       <div className="relative w-full flex items-center justify-between py-[10px]">
-        {/*Left*/}
         <div className="flex items-center gap-x-3">
-          {/*Conversation user picture*/}
           <div
             className={`relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden ${
               online ? "online" : ""
@@ -50,73 +82,37 @@ function Conversation({ convo, socket, online, typing }) {
                   ? convo.picture
                   : getConversationPicture(user, convo.users)
               }
-              alt="picture"
-              className="w-full h-full object-cover "
+              alt="convo"
+              className="w-full h-full object-cover"
             />
           </div>
-          {/*Conversation name and message*/}
           <div className="w-full flex flex-col">
-            {/*Conversation name*/}
             <h1 className="font-bold flex items-center gap-x-2">
-              {convo.isGroup
-                ? convo.name
-                : capitalize(getConversationName(user, convo.users))}
+              {conversationName}
             </h1>
-            {/* Conversation message */}
             <div>
               <div className="flex items-center gap-x-1 dark:text-dark_text_2">
-                <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                  {convo.latestMessage.files.length > 0 &&
-                  convo.latestMessage.type === "cloudinary" ? (
-                    <p>{`${
-                      convo.latestMessage.files[0].file.original_filename
-                    }.${convo.latestMessage.files[0].type.toLowerCase()}`}</p>
-                  ) : convo.latestMessage.type === "waba" &&
-                    convo.latestMessage.files[0].file.type === "document" ? (
-                    // <p className="text-green_1">Yazıyor...</p>
-                    <p>{convo.latestMessage.files[0].file.filename}</p>
-                  ) : convo.latestMessage.type === "waba" &&
-                    convo.latestMessage.files[0].file.type === "image" ? (
-                    // <p className="text-green_1">Yazıyor...</p>
-                    <p>[Resim dosyası]</p>
-                  ) : (
-                    <p>
-                      {convo.latestMessage?.message.length > 25
-                        ? `${convo.latestMessage?.message.substring(0, 25)}...`
-                        : convo.latestMessage?.message}
-                    </p>
-                  )}
-                </div>
+                <p className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
+                  {latestMessage}
+                </p>
               </div>
             </div>
           </div>
         </div>
-        {/*Right*/}
-        <div className="flex  gap-y-4 items-end text-xs">
-          {convo.closed ? (
+        <div className="flex gap-y-4 items-end text-xs">
+          {isClosed ? (
             <IconMessageOff
               style={{ width: "80%", height: "80%" }}
               stroke={1.5}
             />
           ) : (
             <span className="dark:text-dark_text_2">
-              {convo.latestMessage?.createdAt
-                ? dateHandler(convo.latestMessage?.createdAt)
-                : ""}
+              {dateHandler(convo.latestMessage?.createdAt)}
             </span>
           )}
         </div>
       </div>
-      {/*Border*/}
       <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
     </li>
   );
 }
-
-const ConversationWithContext = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <Conversation {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-
-export default ConversationWithContext;

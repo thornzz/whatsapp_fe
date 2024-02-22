@@ -16,7 +16,10 @@ import { useClickOutside } from "@mantine/hooks";
 function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
   const clickOutSideRef = useClickOutside(() => {
     setShowOnlineUsers(false);
-    setSelectedAction("");
+    setSelectedAction((prev) => ({
+      current: prev.previous,
+      previous: "users",
+    }));
   });
 
   return (
@@ -33,7 +36,10 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
           aria-label="Online Users"
           onClick={() => {
             setShowOnlineUsers(false);
-            setSelectedAction("");
+            setSelectedAction((prev) => ({
+              current: prev.previous,
+              previous: "users",
+            }));
           }}
         >
           <IconArrowBack

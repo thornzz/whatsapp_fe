@@ -1,4 +1,13 @@
-import { ActionIcon, Avatar, Combobox, Group, Indicator, ScrollArea, Text, useCombobox } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Combobox,
+  Group,
+  Indicator,
+  ScrollArea,
+  Text,
+  useCombobox,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconTransfer } from "@tabler/icons-react";
@@ -6,15 +15,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getConversations, setActiveConversation } from "../../../features/chatSlice";
+import {
+  getConversations,
+  setActiveConversation,
+} from "../../../features/chatSlice";
 import classes from "./ComboBox.module.css";
+import { axiosPrivate } from "../../../utils/axiosprivate";
 
 function ComboBoxTransferConversation({ onlineUsers, socket }) {
-  const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
+  const CONVERSATION_ENDPOINT = `/conversation`;
   const dispatch = useDispatch();
   const { activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
-  const { token } = user;
   const [searchAgent, setSearchAgent] = useState("");
   const [transferredUser, setTransferredUser] = useState({});
 
@@ -32,16 +44,16 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
   const agentOptions = onlineUsers
     .filter(
       (item) =>
-        item.user.name
+        item?.user?.name
           .toLowerCase()
           .includes(searchAgent.toLowerCase().trim()) &&
-        item.user._id !== user._id
+        item?.user?._id !== user?._id
     )
     .map((item, index) => (
       <Combobox.Option
         className={classes.option}
         value={item}
-        key={item.user._id}
+        key={item?.user?._id}
         onMouseOver={() => comboboxTransferConvo.selectOption(index)}
         style={{ padding: 2 }}
       >
@@ -55,9 +67,9 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
             position="bottom-end"
             withBorder
           >
-            <Avatar src={item.user.picture}></Avatar>
+            <Avatar src={item?.user?.picture}></Avatar>
           </Indicator>
-          <Text>{item.user.name}</Text>
+          <Text>{item?.user?.name}</Text>
         </Group>
       </Combobox.Option>
     ));
@@ -91,20 +103,12 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
 
   const transferConversationHandler = async (transferredUser) => {
     try {
-      axios
-        .post(
-          `${CONVERSATION_ENDPOINT}/transfer`,
-          {
-            convo_id: activeConversation._id,
-            oldUserId: user._id,
-            newUserId: transferredUser.user._id,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+      axiosPrivate
+        .post(`${CONVERSATION_ENDPOINT}/transfer`, {
+          convo_id: activeConversation?._id,
+          oldUserId: user?._id,
+          newUserId: transferredUser?.user?._id,
+        })
         .then((res) => {
           notifications.show({
             color: "#00A884",
@@ -120,7 +124,7 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
             transferrer: { ...user, socketId: socket.id },
             transferredUser,
           });
-          dispatch(getConversations(user.token));
+          dispatch(getConversations());
           dispatch(setActiveConversation({}));
         })
         .catch((err) => {
@@ -167,7 +171,7 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
       <Combobox.Target withAriaAttributes={false}>
         <ActionIcon
           variant="light"
-          size={36}
+          size={28}
           color="gray"
           aria-label="Search Active Agents"
           onClick={() => {

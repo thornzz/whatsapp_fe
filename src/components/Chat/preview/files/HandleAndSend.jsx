@@ -7,12 +7,17 @@ import {
   removeFileFromFiles,
   sendMessage,
 } from "../../../../features/chatSlice";
-import SocketContext from "../../../../context/SocketContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import VideoThumbnail from "react-video-thumbnail";
-
-function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
+import { useSocketContext } from "../../../../context/SocketProvider";
+export default function HandleAndSend({
+  activeIndex,
+  setActiveIndex,
+  message,
+}) {
   const dispatch = useDispatch();
+  const socket = useSocketContext();
+
   const [loading, setLoading] = useState(false);
   const { files, activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
@@ -95,10 +100,3 @@ function HandleAndSend({ activeIndex, setActiveIndex, message, socket }) {
     </div>
   );
 }
-
-const HandleAndSendWithContext = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <HandleAndSend {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-export default HandleAndSendWithContext;

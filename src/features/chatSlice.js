@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { axiosPrivate } from "../utils/axiosprivate";
 
-const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
-const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
+const CONVERSATION_ENDPOINT = `/conversation`;
+const MESSAGE_ENDPOINT = `/message`;
 
 const initialState = {
   status: "",
@@ -227,13 +227,10 @@ export const chatSlice = createSlice({
 //functions
 export const getConversations = createAsyncThunk(
   "conervsation/all",
-  async (token, { rejectWithValue }) => {
+  async (values, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(CONVERSATION_ENDPOINT, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axiosPrivate.get("/conversation");
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -244,15 +241,10 @@ export const getClosedConversations = createAsyncThunk(
   "conervsation/closed",
   async (values, { rejectWithValue }) => {
     try {
-      const { token, closed } = values;
+      const { closed } = values;
 
-      const { data } = await axios.get(
-        `${CONVERSATION_ENDPOINT}/?closed=${closed}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data } = await axiosPrivate.get(
+        `${CONVERSATION_ENDPOINT}/?closed=${closed}`
       );
       return data;
     } catch (error) {
@@ -265,15 +257,10 @@ export const getUserConversations = createAsyncThunk(
   "conervsation/user",
   async (values, { rejectWithValue }) => {
     try {
-      const { token, receiver_id } = values;
+      const { receiver_id } = values;
 
-      const { data } = await axios.get(
-        `${CONVERSATION_ENDPOINT}/user/?receiver=${receiver_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data } = await axiosPrivate.get(
+        `${CONVERSATION_ENDPOINT}/user/?receiver=${receiver_id}`
       );
       return data;
     } catch (error) {
@@ -285,17 +272,14 @@ export const getUserConversations = createAsyncThunk(
 export const open_create_conversation = createAsyncThunk(
   "conervsation/open_create",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id, isGroup, waba_user_id, closed } = values;
+    const { receiver_id, isGroup, waba_user_id, closed } = values;
     try {
-      const { data } = await axios.post(
-        CONVERSATION_ENDPOINT,
-        { receiver_id, isGroup, waba_user_id, closed },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await axiosPrivate.post(CONVERSATION_ENDPOINT, {
+        receiver_id,
+        isGroup,
+        waba_user_id,
+        closed,
+      });
       console.log(data, "open_create_conversation");
       console.log(values, "open_create_conversation gönderilen data");
       return data;
@@ -307,13 +291,11 @@ export const open_create_conversation = createAsyncThunk(
 export const getConversationMessages = createAsyncThunk(
   "conervsation/messages",
   async (values, { rejectWithValue }) => {
-    const { token, convo_id } = values;
+    const { convo_id } = values;
     try {
-      const { data } = await axios.get(`${MESSAGE_ENDPOINT}/${convo_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axiosPrivate.get(
+        `${MESSAGE_ENDPOINT}/${convo_id}`
+      );
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -323,15 +305,10 @@ export const getConversationMessages = createAsyncThunk(
 export const getClosedConversationMessages = createAsyncThunk(
   "conervsation/closed_messages",
   async (values, { rejectWithValue }) => {
-    const { token, convo_name } = values;
+    const { convo_name } = values;
     try {
-      const { data } = await axios.get(
-        `${MESSAGE_ENDPOINT}/?convo_name=${convo_name}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data } = await axiosPrivate.get(
+        `${MESSAGE_ENDPOINT}/?convo_name=${convo_name}`
       );
       return data;
     } catch (error) {
@@ -343,25 +320,16 @@ export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
     console.log("send msg tetiklendi", values);
-    const { token, message, convo_id, files, waba_user_phonenumber, type } =
-      values;
+    const { message, convo_id, files, waba_user_phonenumber, type } = values;
 
     try {
-      const { data } = await axios.post(
-        MESSAGE_ENDPOINT,
-        {
-          message,
-          convo_id,
-          files,
-          waba_user_phonenumber,
-          type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await axiosPrivate.post(MESSAGE_ENDPOINT, {
+        message,
+        convo_id,
+        files,
+        waba_user_phonenumber,
+        type,
+      });
 
       return data;
     } catch (error) {
@@ -372,16 +340,11 @@ export const sendMessage = createAsyncThunk(
 export const createGroupConversation = createAsyncThunk(
   "conervsation/create_group",
   async (values, { rejectWithValue }) => {
-    const { token, name, users } = values;
+    const { name, users } = values;
     try {
-      const { data } = await axios.post(
+      const { data } = await axiosPrivate.post(
         `${CONVERSATION_ENDPOINT}/group`,
-        { name, users },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { name, users }
       );
       return data;
     } catch (error) {
@@ -393,17 +356,12 @@ export const createGroupConversation = createAsyncThunk(
 export const closeConversation = createAsyncThunk(
   "conervsation/close",
   async (values, { rejectWithValue }) => {
-    const { convo_id, token } = values;
+    const { convo_id } = values;
 
     try {
-      const { data } = await axios.post(
+      const { data } = await axiosPrivate.post(
         `${CONVERSATION_ENDPOINT}/close`,
-        { convo_id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { convo_id }
       );
       return data;
     } catch (error) {

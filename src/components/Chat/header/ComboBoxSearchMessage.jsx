@@ -1,20 +1,20 @@
-import { useDispatch, useSelector } from "react-redux";
-import { tarihFormatla } from "../../../utils/date";
-import classes from "./ComboBox.module.css";
 import {
-  Combobox,
-  Text,
-  Highlight,
-  Flex,
-  Divider,
-  useCombobox,
   ActionIcon,
+  Combobox,
+  Divider,
+  Flex,
+  Highlight,
   ScrollArea,
+  Text,
+  useCombobox,
 } from "@mantine/core";
-
 import { IconSearch } from "@tabler/icons-react";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { setFocusedMessage } from "../../../features/chatSlice";
+import { tarihFormatla } from "../../../utils/date";
+import classes from "./ComboBox.module.css";
 
 function ComboBoxSearchMessage() {
   const dispatch = useDispatch();
@@ -87,7 +87,7 @@ function ComboBoxSearchMessage() {
       <Combobox.Target withAriaAttributes={false}>
         <ActionIcon
           variant="light"
-          size={36}
+          size={28}
           color="gray"
           aria-label="Search"
           onClick={() => {

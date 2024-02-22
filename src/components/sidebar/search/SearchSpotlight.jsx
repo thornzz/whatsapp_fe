@@ -1,20 +1,21 @@
-import { Center, Group, rem, Text } from "@mantine/core";
-import { spotlight, Spotlight } from "@mantine/spotlight";
+import { Center, Group, Text } from "@mantine/core";
+import { Spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { getUserConversations, setActiveConversation } from "../../../features/chatSlice";
-import { logout } from "../../../features/userSlice";
+import {
+  getUserConversations,
+  setActiveConversation,
+} from "../../../features/chatSlice";
+import { axiosPrivate } from "../../../utils/axiosprivate";
 
 function SearchSpotlight() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { token } = user;
 
   useEffect(() => {
     getUsers();
@@ -22,28 +23,16 @@ function SearchSpotlight() {
 
   async function getUsers() {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await axiosPrivate.get("/user");
       setSearchResults(data);
       setQuery("");
     } catch (error) {
-      if (error.response.data.error.message === "Unauthorized") {
-        dispatch(setActiveConversation({}));
-        dispatch(logout());
-      }
-      //console.log(error.response.data.error.message);
+      console.log(error);
     }
   }
   const openConversation = async (data) => {
     const values = {
       receiver_id: data._id,
-      token,
     };
     dispatch(getUserConversations(values));
     dispatch(setActiveConversation({}));
@@ -51,7 +40,6 @@ function SearchSpotlight() {
 
   const items = searchResults
     .filter((item) => {
-      console.log(item.name);
       const { phonenumber, name } = item;
 
       const toLowerTurkish = (str) => {
@@ -69,7 +57,6 @@ function SearchSpotlight() {
       };
 
       const lowerCaseQuery = toLowerTurkish(query.trim());
-      console.log(lowerCaseQuery);
       return (
         phonenumber.includes(lowerCaseQuery) ||
         toLowerTurkish(name).includes(lowerCaseQuery)
@@ -98,20 +85,6 @@ function SearchSpotlight() {
     ));
 
   return (
-    // <Spotlight
-    //   actions={actions}
-    //   nothingFound="Nothing found..."
-    //   highlightQuery
-    //   searchProps={{
-    //     leftSection: (
-    //       <IconSearch
-    //         style={{ width: rem(20), height: rem(20) }}
-    //         stroke={1.5}
-    //       />
-    //     ),
-    //     placeholder: "Search...",
-    //   }}
-    // />
     <Spotlight.Root
       query={query}
       onQueryChange={setQuery}

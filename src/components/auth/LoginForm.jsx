@@ -7,8 +7,10 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../features/userSlice";
 import WBLogo from "../../images/logo.png";
-import SocketContext from "../../context/SocketContext";
-function LoginForm({ socket }) {
+import { useSocketContext } from "../../context/SocketProvider";
+
+export default function LoginForm() {
+  const socket = useSocketContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.user);
@@ -24,7 +26,6 @@ function LoginForm({ socket }) {
 
     if (res?.payload?.user) {
       socket.connect();
-      // socket.emit("join", res?.payload?.user._id);
       navigate("/");
     }
   };
@@ -92,10 +93,3 @@ function LoginForm({ socket }) {
     </div>
   );
 }
-const LoginFormWithContext = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <LoginForm {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-
-export default LoginFormWithContext;

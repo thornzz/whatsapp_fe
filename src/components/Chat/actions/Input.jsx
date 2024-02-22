@@ -1,8 +1,8 @@
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import SocketContext from "../../../context/SocketContext";
-
-function Input({ message, setMessage, textRef, socket }) {
+import { useSocketContext } from "../../../context/SocketProvider";
+export default function Input({ message, setMessage, textRef }) {
+  const socket = useSocketContext();
   const { activeConversation } = useSelector((state) => state.chat);
   const [typing, setTyping] = useState(false);
   const typingTimer = useRef(null); // useRef hook'unu kullanarak typingTimer değişkenini tanımlayın
@@ -10,7 +10,7 @@ function Input({ message, setMessage, textRef, socket }) {
     setMessage(e.target.value);
     if (!typing) {
       setTyping(true);
-      console.log('typing true oldu');
+      console.log("typing true oldu");
       socket.emit("typing", activeConversation._id);
     }
 
@@ -24,7 +24,7 @@ function Input({ message, setMessage, textRef, socket }) {
   };
 
   const stopTyping = () => {
-    console.log('stop typing tetiklendi');
+    console.log("stop typing tetiklendi");
     socket.emit("stop typing", activeConversation._id);
     setTyping(false);
     typingTimer.current = null; // Zamanlayıcıyı sıfırla
@@ -50,10 +50,3 @@ function Input({ message, setMessage, textRef, socket }) {
     </div>
   );
 }
-
-const InputWithSocket = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <Input {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-export default InputWithSocket;

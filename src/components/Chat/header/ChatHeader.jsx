@@ -4,7 +4,8 @@ import { notifications } from "@mantine/notifications";
 import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SocketContext from "../../../context/SocketContext";
+import { useSocketContext } from "../../../context/SocketProvider";
+
 import {
   closeConversation,
   removeClosedConversation,
@@ -17,11 +18,12 @@ import {
 import ComboBoxSearchMessage from "./ComboBoxSearchMessage";
 import ComboBoxTransferConversation from "./ComboBoxTransferConversation";
 
-function ChatHeader({ socket, onlineUsers }) {
+export default function ChatHeader({ onlineUsers }) {
   const { activeConversation, messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const dispatch = useDispatch();
+  const socket = useSocketContext();
   const values = {
     convo_id: activeConversation?._id,
     token,
@@ -86,13 +88,6 @@ function ChatHeader({ socket, onlineUsers }) {
             {/*Conversation name and online status*/}
             <div className="flex flex-col">
               <h1 className="dark:text-white text-md font-bold">
-                {/* {activeConversation.isGroup
-                ? activeConversation.name
-                : capitalize(
-                    getConversationName(user, activeConversation.users).split(
-                      " "
-                    )[0]
-                  )} */}
                 {getConversationNamePhoneNumber(user, activeConversation.users)}
               </h1>
               <span className="text-xs dark:text-dark_svg_2">
@@ -102,20 +97,6 @@ function ChatHeader({ socket, onlineUsers }) {
           </div>
           {/*Right*/}
           <ul className="flex items-center gap-x-2.5">
-            {/* {1 == 1 ? (
-            <li onClick={() => callUser()}>
-              <button className="btn">
-                <VideoCallIcon />
-              </button>
-            </li>
-          ) : null}
-          {1 == 1 ? (
-            <li>
-              <button className="btn">
-                <CallIcon />
-              </button>
-            </li>
-          ) : null} */}
             <li>
               <ComboBoxSearchMessage />
             </li>
@@ -150,7 +131,7 @@ function ChatHeader({ socket, onlineUsers }) {
                     variant="light"
                     color="gray"
                     aria-label="Menu"
-                    size={36}
+                    size={28}
                   >
                     <IconDotsVertical
                       style={{ width: "100%", height: "100%" }}
@@ -177,22 +158,9 @@ function ChatHeader({ socket, onlineUsers }) {
                 </Menu.Dropdown>
               </Menu>
             </li>
-
-            {/* <li>
-              <button className="btn">
-                <DotsIcon className="dark:fill-dark_svg_1" />
-              </button>
-            </li> */}
           </ul>
         </div>
       </div>
     </>
   );
 }
-
-const ChatHeaderWithSocket = (props) => (
-  <SocketContext.Consumer>
-    {(socket) => <ChatHeader {...props} socket={socket} />}
-  </SocketContext.Consumer>
-);
-export default ChatHeaderWithSocket;

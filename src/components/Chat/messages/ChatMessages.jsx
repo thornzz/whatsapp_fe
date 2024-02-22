@@ -3,9 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import FileMessage from "./files/FileMessage";
 import Message from "./Message";
-import Typing from "./Typing";
 
-export default function ChatMessages({ typing }) {
+export default function ChatMessages() {
   const { messages, activeConversation, focusedMessage } = useSelector(
     (state) => state.chat
   );
@@ -15,7 +14,7 @@ export default function ChatMessages({ typing }) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, typing]);
+  }, [messages]);
   const scrollToBottom = () => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -90,7 +89,7 @@ export default function ChatMessages({ typing }) {
               ) : null}
             </React.Fragment>
           ))}
-        {typing === activeConversation._id ? <Typing key="typing" /> : null}
+
         <div className="mt-2" ref={endRef}></div>
       </div>
     </div>
