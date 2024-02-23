@@ -1,7 +1,12 @@
-import { ActionIcon, Menu, rem, Text } from "@mantine/core";
+import { ActionIcon, Menu, rem, Text, Avatar } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconTrash,
+  IconLogout,
+  IconBrandTwitch,
+} from "@tabler/icons-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSocketContext } from "../../../context/SocketProvider";
@@ -11,6 +16,7 @@ import {
   removeClosedConversation,
   setActiveConversation,
 } from "../../../features/chatSlice";
+import { logout } from "../../../features/userSlice";
 import {
   getConversationNamePhoneNumber,
   getConversationPicture,
@@ -28,6 +34,7 @@ export default function ChatHeader({ onlineUsers }) {
     convo_id: activeConversation?._id,
     token,
   };
+
   const deleteDialog = () =>
     modals.openConfirmModal({
       title: "Sohbet sonlandırma",
@@ -68,31 +75,25 @@ export default function ChatHeader({ onlineUsers }) {
 
   return (
     <>
-      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
+      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none ">
         {/*Container*/}
         <div className="w-full flex items-center justify-between">
           {/*left*/}
           <div className="flex items-center gap-x-4">
             {/*Conversation image*/}
-            <button className="btn">
-              <img
-                src={
-                  activeConversation.isGroup
-                    ? activeConversation.picture
-                    : getConversationPicture(user, activeConversation.users)
-                }
-                alt=""
-                className="w-full h-full rounded-full object-cover"
+            <span className="hidOnSM">
+              <Avatar
+                size={40}
+                radius="xl"
+                src={getConversationPicture(user, activeConversation.users)}
               />
-            </button>
-            {/*Conversation name and online status*/}
+            </span>
+
+            {/*Conversation name*/}
             <div className="flex flex-col">
               <h1 className="dark:text-white text-md font-bold">
                 {getConversationNamePhoneNumber(user, activeConversation.users)}
               </h1>
-              <span className="text-xs dark:text-dark_svg_2">
-                {/* {online ? "Çevrimiçi" : ""} */}
-              </span>
             </div>
           </div>
           {/*Right*/}
@@ -153,7 +154,38 @@ export default function ChatHeader({ onlineUsers }) {
                   >
                     Sonlandır
                   </Menu.Item>
+                  <span className="hidOnMD">
+                    <Menu.Item
+                      onClick={() => {
+                        dispatch(setActiveConversation({}));
+                      }}
+                      leftSection={
+                        <IconBrandTwitch
+                          style={{ width: rem(14), height: rem(14) }}
+                        />
+                      }
+                    >
+                      Sohbeti Kapat
+                    </Menu.Item>
 
+                    <Menu.Label>Diğer</Menu.Label>
+                    <Menu.Item
+                      onClick={() => {
+                        dispatch(setActiveConversation({}));
+                        dispatch(logout());
+
+                        socket.emit("logout", { ...user, socketId: socket.id });
+                        socket.disconnect();
+                      }}
+                      leftSection={
+                        <IconLogout
+                          style={{ width: rem(14), height: rem(14) }}
+                        />
+                      }
+                    >
+                      Oturumu sonlandır
+                    </Menu.Item>
+                  </span>
                   <Menu.Divider />
                 </Menu.Dropdown>
               </Menu>

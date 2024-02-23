@@ -21,6 +21,7 @@ import OnlineUsers from "./OnlineUsers";
 export default function SidebarHeader({ onlineUsers, socket }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { activeConversation } = useSelector((state) => state.chat);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
   const [selectedAction, setSelectedAction] = useState({
     current: "open",
@@ -130,7 +131,11 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                   />
                 </ActionIcon>
               </li>
-              <li>
+              <li
+                className={`${
+                  Object.keys(activeConversation).length > 0 ? "hidOnSM" : ""
+                }`}
+              >
                 <Menu
                   position="left-start"
                   offset={0}

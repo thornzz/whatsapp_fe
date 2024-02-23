@@ -62,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-scroll": "^1.8.10",
     "postcss": "^8.4.34",
     "postcss-preset-mantine": "^1.13.0",
     "postcss-simple-vars": "^7.0.1",

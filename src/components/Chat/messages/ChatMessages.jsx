@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import FileMessage from "./files/FileMessage";
 import Message from "./Message";
 
@@ -13,11 +12,9 @@ export default function ChatMessages() {
   const messageRefs = useRef({});
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-  const scrollToBottom = () => {
+    // Mesajlar güncellendiğinde scroll işlemini tetikle
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  };
+  }, [messages]); // Mesajlar güncellendiğinde useEffect hook'unu tetikle
 
   useEffect(() => {
     scrollMessageIntoView(focusedMessage?._id);
@@ -47,7 +44,7 @@ export default function ChatMessages() {
   return (
     <div
       className="mb-[60px] bg-[url('https://res.cloudinary.com/dmhcnhtng/image/upload/v1677358270/Untitled-1_copy_rpx8yb.jpg')]
-      bg-cover bg-no-repeat"
+      bg-cover bg-no-repeat "
     >
       {/*Container*/}
       <div className="scrollbar overflow_scrollbar overflow-auto py-2 px-[5%]">

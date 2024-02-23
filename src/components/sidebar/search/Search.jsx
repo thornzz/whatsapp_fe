@@ -36,7 +36,7 @@ export default function Search({ searchLength, setSearchResults }) {
   return (
     <>
       <SearchSpotlight />
-      <div className="h-[49px] py-1.5">
+      <div className="h-[49px] py-1.5 hidOnSM">
         {/*Container*/}
         <div className="px-[10px]">
           {/*Search input container*/}

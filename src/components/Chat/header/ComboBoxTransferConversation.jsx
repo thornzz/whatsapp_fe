@@ -21,6 +21,7 @@ import {
 } from "../../../features/chatSlice";
 import classes from "./ComboBox.module.css";
 import { axiosPrivate } from "../../../utils/axiosprivate";
+import { useMediaQuery } from "@mantine/hooks";
 
 function ComboBoxTransferConversation({ onlineUsers, socket }) {
   const CONVERSATION_ENDPOINT = `/conversation`;
@@ -28,7 +29,7 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const [searchAgent, setSearchAgent] = useState("");
-  const [transferredUser, setTransferredUser] = useState({});
+  const isSM = useMediaQuery("(max-width: 640px)");
 
   const comboboxTransferConvo = useCombobox({
     scrollBehavior: "smooth",
@@ -148,9 +149,9 @@ function ComboBoxTransferConversation({ onlineUsers, socket }) {
     <Combobox
       withinPortal={false}
       store={comboboxTransferConvo}
-      width={350}
-      height={300}
-      size="md"
+      width={isSM ? 200 : 350}
+      height={isSM ? 150 : 300}
+      size="sm"
       position="bottom"
       onOptionSubmit={(val) => {
         comboboxTransferConvo.closeDropdown();

@@ -8,6 +8,7 @@ import {
   Text,
   useCombobox,
 } from "@mantine/core";
+
 import { IconSearch } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,9 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFocusedMessage } from "../../../features/chatSlice";
 import { tarihFormatla } from "../../../utils/date";
 import classes from "./ComboBox.module.css";
+import { useMediaQuery } from "@mantine/hooks";
 
 function ComboBoxSearchMessage() {
   const dispatch = useDispatch();
+  const isSM = useMediaQuery("(max-width: 640px)");
   const { activeConversation, messages } = useSelector((state) => state.chat);
   const [search, setSearch] = useState("");
   const comboboxSearchMessage = useCombobox({
@@ -64,9 +67,9 @@ function ComboBoxSearchMessage() {
     <Combobox
       withinPortal={false}
       store={comboboxSearchMessage}
-      width={350}
-      height={300}
-      size="md"
+      width={isSM ? 200 : 350}
+      height={isSM ? 150 : 300}
+      size="sm"
       position="bottom"
       styles={{
         dropdown: {

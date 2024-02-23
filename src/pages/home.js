@@ -9,6 +9,8 @@ import { useAxiosInterceptor } from "../hooks/useAxiosInterceptor";
 import { logout } from "../features/userSlice";
 import { notifications } from "@mantine/notifications";
 import { axiosPrivate } from "../utils/axiosprivate";
+import { useDisclosure } from "@mantine/hooks";
+import { Burger, Drawer } from "@mantine/core";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -17,6 +19,8 @@ export default function Home() {
   const socket = useSocketContext();
   const [onlineUsers] = useSocket(socket, user);
   const [isCookieExpired] = useAxiosInterceptor();
+  const [opened, { toggle }] = useDisclosure();
+  const isSmScreen = window.innerWidth < 640;
 
   useEffect(() => {
     if (user) {
@@ -53,8 +57,20 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
-      <div className="container h-screen w-screen flex py-[19px]">
-        <Sidebar onlineUsers={onlineUsers} socket={socket} />
+      <div className="container h-screen w-screen flex flex-col sm:flex-row sm:py-[17px]">
+        {/* <Burger
+          className="sm:hidden"
+          size="sm"
+          opened={opened}
+          onClick={toggle}
+          aria-label="Burger menuyu aç"
+        /> */}
+        <Sidebar
+          onlineUsers={onlineUsers}
+          socket={socket}
+          opened
+          isSmScreen={isSmScreen}
+        />
         {chatContainer}
       </div>
     </div>

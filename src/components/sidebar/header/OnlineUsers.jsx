@@ -71,14 +71,14 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
                     position="bottom-end"
                     withBorder
                   >
-                    <Avatar src={user.user.picture} />
+                    <Avatar src={user.user.picture} size={28} />
                   </Indicator>
                 </Grid.Col>
                 <Grid.Col span={3.5}>
-                  <Text>{user.user.name}</Text>
+                  <Text size="sm">{user.user.name}</Text>
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Text>{user.user.email}</Text>
+                  <Text size="sm">{user.user.email}</Text>
                 </Grid.Col>
                 <Grid.Col span={1} offset={4}>
                   <IconWifi
