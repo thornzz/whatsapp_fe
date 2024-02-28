@@ -10,7 +10,9 @@
 @tailwind utilities;
 
 @layer components {
-
+  .flex0030 {
+    flex: 0 0 30%;
+  }
   .hidOnSM {
    @media screen and (max-width: 640px){
     display: none;
@@ -246,6 +248,7 @@
 }
 .slide-up-animation {
   animation: cga 0.5s;
+
 }
 
 @keyframes cga {

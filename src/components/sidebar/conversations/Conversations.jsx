@@ -23,7 +23,7 @@ export default function Conversations({ onlineUsers, typing, isSmScreen }) {
     <>
       {(isSmScreen && Object.keys(activeConversation).length === 0) ||
       !isSmScreen ? (
-        <div className="convos scrollbar">
+        <div className="convos scrollbar ">
           <ul>
             {!isConversationsEmpty ? (
               renderConversationList()

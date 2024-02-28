@@ -74,7 +74,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
             gradient={{ from: "blue", to: "cyan", deg: 90 }}
             aria-label="Online Users"
             onClick={() => {
-              setShowOnlineUsers(true);
+              setShowOnlineUsers((prev) => !prev);
               setSelectedAction((prev) => ({
                 current: "users",
                 previous: prev.current,
@@ -91,7 +91,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
           <div />
           <div className="w-full flex items-center justify-end">
             {/*user icons*/}
-            <ul className="flex items-center gap-x-2 5">
+            <ul className="flex items-center gap-x-2">
               <li>
                 <ActionIcon
                   variant={
@@ -100,7 +100,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                   size={30}
                   radius="md"
                   color="green"
-                  aria-label="Online Users"
+                  aria-label="Active convos"
                   onClick={handleOpenConversations}
                 >
                   <IconMessage
@@ -120,7 +120,7 @@ export default function SidebarHeader({ onlineUsers, socket }) {
                   size={30}
                   radius="md"
                   color="pink"
-                  aria-label="Online Users"
+                  aria-label="Closed convos"
                   onClick={handleClosedConversations}
                 >
                   <IconMessageOff

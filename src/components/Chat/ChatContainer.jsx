@@ -67,7 +67,7 @@ export default function ChatContainer({ onlineUsers }) {
   return (
     <>
       {!activeConversation.closed && <FileDropzone />}
-      <div className=" relative w-full h-full border-l dark:border-l-dark_border_2 select-none overflow-hidden">
+      <div className=" relative w-full h-full border-l dark:border-l-dark_border_2 select-none overflow-clip">
         <LoadingOverlay
           visible={visible}
           zIndex={1000}

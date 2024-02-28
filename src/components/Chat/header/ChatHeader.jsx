@@ -32,6 +32,7 @@ export default function ChatHeader({ onlineUsers }) {
   const socket = useSocketContext();
   const values = {
     convo_id: activeConversation?._id,
+    to: activeConversation?.users[0]?.phonenumber,
     token,
   };
 
@@ -75,7 +76,7 @@ export default function ChatHeader({ onlineUsers }) {
 
   return (
     <>
-      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none ">
+      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none z-99">
         {/*Container*/}
         <div className="w-full flex items-center justify-between">
           {/*left*/}

@@ -356,12 +356,12 @@ export const createGroupConversation = createAsyncThunk(
 export const closeConversation = createAsyncThunk(
   "conervsation/close",
   async (values, { rejectWithValue }) => {
-    const { convo_id } = values;
+    const { convo_id, to } = values;
 
     try {
       const { data } = await axiosPrivate.post(
         `${CONVERSATION_ENDPOINT}/close`,
-        { convo_id }
+        { convo_id, to }
       );
       return data;
     } catch (error) {

@@ -25,7 +25,7 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
   return (
     <div
       ref={clickOutSideRef}
-      className="slide-up-animation relative flex0030 h-full z-40"
+      className="slide-up-animation  max-h-full h-full relative "
     >
       {/*Container*/}
       <div className="mt-5">
