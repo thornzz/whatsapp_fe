@@ -1,16 +1,16 @@
-import { ActionIcon, Menu, rem, Text, Avatar } from "@mantine/core";
+import { ActionIcon, Avatar, Menu, rem, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
-  IconDotsVertical,
-  IconTrash,
-  IconLogout,
   IconBrandTwitch,
+  IconDotsVertical,
+  IconLogout,
+  IconTrash,
 } from "@tabler/icons-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSocketContext } from "../../../context/SocketProvider";
 
+import { useSocketContext } from "../../../context/SocketProvider";
 import {
   closeConversation,
   removeClosedConversation,
@@ -76,7 +76,7 @@ export default function ChatHeader({ onlineUsers }) {
 
   return (
     <>
-      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none z-99">
+      <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none sticky top-0">
         {/*Container*/}
         <div className="w-full flex items-center justify-between">
           {/*left*/}
