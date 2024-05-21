@@ -1,4 +1,4 @@
-import { Button, Flex, Group, rem, Text } from "@mantine/core";
+import { Flex, Group, rem, Text } from "@mantine/core";
 import {
   Dropzone,
   IMAGE_MIME_TYPE,
@@ -9,7 +9,6 @@ import {
 } from "@mantine/dropzone";
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import React from "react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { addFiles } from "../../../../features/chatSlice";
@@ -29,6 +28,7 @@ const FileDropzone = () => {
         "text/plain",
       ]}
       onDrop={(files) => {
+        // eslint-disable-next-line array-callback-return
         files.map((file) => {
           const reader = new FileReader();
           reader.onload = (e) => {

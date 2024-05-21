@@ -9,8 +9,6 @@ import { useAxiosInterceptor } from "../hooks/useAxiosInterceptor";
 import { logout } from "../features/userSlice";
 import { notifications } from "@mantine/notifications";
 import { axiosPrivate } from "../utils/axiosprivate";
-import { useDisclosure } from "@mantine/hooks";
-import { Burger, Drawer } from "@mantine/core";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -19,7 +17,7 @@ export default function Home() {
   const socket = useSocketContext();
   const [onlineUsers] = useSocket(socket, user);
   const [isCookieExpired] = useAxiosInterceptor();
-  const [opened, { toggle }] = useDisclosure();
+
   const isSmScreen = window.innerWidth < 640;
 
   useEffect(() => {

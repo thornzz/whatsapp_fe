@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import FileMessage from "./files/FileMessage";
 import Message from "./Message";
 
 export default function ChatMessages() {
-  const { messages, activeConversation, focusedMessage } = useSelector(
-    (state) => state.chat
-  );
+  const { messages, focusedMessage } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const endRef = useRef();
   const messageRefs = useRef({});

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import DownloadIcon from "../../../../svg/Download";
 import { DownloadFile } from "../../../../utils/waba-download";
 

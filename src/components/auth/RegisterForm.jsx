@@ -9,7 +9,7 @@ import { changeStatus, registerUser } from "../../features/userSlice";
 import { useState } from "react";
 import Picture from "./Picture";
 import axios from "axios";
-import WBLogo from '../../images/logo.png'
+import WBLogo from "../../images/logo.png";
 
 const cloud_name = process.env.REACT_APP_CLOUD_NAME;
 const cloud_secret = process.env.REACT_APP_CLOUD_SECRET;
@@ -22,7 +22,6 @@ export default function RegisterForm() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signUpSchema),
@@ -40,10 +39,10 @@ export default function RegisterForm() {
         }
       });
     } else {
-    let res = await dispatch(registerUser({ ...data, picture: "" }));
+      let res = await dispatch(registerUser({ ...data, picture: "" }));
 
-    if (res?.payload?.user) {
-      navigate("/");
+      if (res?.payload?.user) {
+        navigate("/");
       }
     }
   };
@@ -64,14 +63,14 @@ export default function RegisterForm() {
       <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
         {/*Heading*/}
         <div className="text-center dark:text-dark_text_1">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center justify-center">
-        <div className="mt-4">
-          <img src={WBLogo} alt="WB Logo" className="w-20 h-20" />
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
-          K2M Business Whatsapp
-        </h2>
-      </div>
+          <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center justify-center">
+            <div className="mt-4">
+              <img src={WBLogo} alt="WB Logo" className="w-20 h-20" />
+            </div>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
+              K2M Business Whatsapp
+            </h2>
+          </div>
         </div>
         {/*Form*/}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">

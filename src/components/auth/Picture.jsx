@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import { useRef, useState } from "react";
 
 export default function Picture({
@@ -9,7 +10,7 @@ export default function Picture({
   const inputRef = useRef();
   const handlePicture = (e) => {
     let pic = e.target.files[0];
-    console.log(pic)
+    console.log(pic);
     if (
       pic.type !== "image/jpeg" &&
       pic.type !== "image/png" &&
@@ -21,7 +22,7 @@ export default function Picture({
       setError(`${pic.name} dosya boyutu çok büyük 5mb fazla olmamalı.`);
       return;
     } else {
-        console.log('else girdi')
+      console.log("else girdi");
       setError("");
       setPicture(pic);
       //reading the picture
@@ -39,7 +40,7 @@ export default function Picture({
   return (
     <div className="mt-8 content-center dark:text-dark_text_1 space-y-1">
       <label htmlFor="picture" className="text-sm font-bold tracking-wide">
-       Profil Resmi (Opsiyonel)
+        Profil Resmi (Opsiyonel)
       </label>
       {readablePicture ? (
         <div>
@@ -62,7 +63,7 @@ export default function Picture({
         "
           onClick={() => inputRef.current.click()}
         >
-        Resmi yükle
+          Resmi yükle
         </div>
       )}
       <input

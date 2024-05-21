@@ -119,6 +119,7 @@ export const useSocket = (socket, user) => {
 
       window.removeEventListener("beforeunload", handleUnload);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return [onlineUsers];

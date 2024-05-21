@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import Add from "./Add";
 import { CloseIcon, SendIcon } from "../../../../svg";
 import { uploadFiles } from "../../../../utils/upload";
 import { useState } from "react";

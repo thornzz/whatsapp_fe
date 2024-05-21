@@ -5,7 +5,7 @@ import { Attachments } from "./attachments";
 import EmojiPickerApp from "./EmojiPicker";
 import Input from "./Input";
 import { useClickOutside } from "@mantine/hooks";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { useSocketContext } from "../../../context/SocketProvider";
@@ -14,7 +14,7 @@ export default function ChatActions() {
   const dispatch = useDispatch();
   const socket = useSocketContext();
   const [showPicker, setShowPicker] = useState(false);
-  const [showAttachments, setShowAttachments] = useState(false);
+  //const [showAttachments, setShowAttachments] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const refShowPicker = useClickOutside(() => setShowPicker(false));
@@ -68,7 +68,7 @@ export default function ChatActions() {
               setMessage={setMessage}
               showPicker={showPicker}
               setShowPicker={setShowPicker}
-              setShowAttachments={setShowAttachments}
+              //setShowAttachments={setShowAttachments}
             />
             <Attachments />
           </ul>

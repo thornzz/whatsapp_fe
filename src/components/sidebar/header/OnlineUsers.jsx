@@ -1,7 +1,16 @@
-import { ActionIcon, Avatar, Divider, Grid, Group, Indicator, Stack, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Divider,
+  Grid,
+  Group,
+  Indicator,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useClickOutside } from "@mantine/hooks";
 import { IconArrowBack, IconWifi } from "@tabler/icons-react";
-import { useEffect } from "react";
 
 function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
   const clickOutSideRef = useClickOutside(() => {
@@ -13,10 +22,7 @@ function OnlineUsers({ setShowOnlineUsers, onlineUsers, setSelectedAction }) {
   });
 
   return (
-    <div
-      ref={clickOutSideRef}
-      className="slide-up-animation h-full relative "
-    >
+    <div ref={clickOutSideRef} className="slide-up-animation h-full relative ">
       {/*Container*/}
       <div className="mt-5">
         <ActionIcon

@@ -29,6 +29,7 @@ const Message = ({ message, me, index, user, onRefUpdate, focusedMessage }) => {
 
   useEffect(() => {
     onRefUpdate(messageRef, index, message._id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageRef]);
 
   useEffect(() => {

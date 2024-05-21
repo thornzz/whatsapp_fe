@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { FilterIcon, ReturnIcon, SearchIcon } from "../../../svg";
+import { ReturnIcon, SearchIcon } from "../../../svg";
 import SearchSpotlight from "./SearchSpotlight";
 import { spotlight } from "@mantine/spotlight";
 
@@ -59,6 +59,7 @@ export default function Search({ searchLength, setSearchResults }) {
                 placeholder="Tüm kişilerde ara..."
                 className="input"
                 onFocus={() => setShow(true)}
+                // eslint-disable-next-line eqeqeq
                 onBlur={() => searchLength == 0 && setShow(false)}
                 onKeyDown={(e) => handleSearch(e)}
                 value={searchValue}
