@@ -2,7 +2,9 @@ import React, { createContext, useContext, useEffect } from "react";
 import io from "socket.io-client";
 
 const SocketContext = createContext(null);
-const socket = io(process.env.REACT_APP_API_ENDPOINT.split("/api/v1")[0]);
+const socket = io(process.env.REACT_APP_API_ENDPOINT.split("/api/v1")[0], {
+  withCredentials: true,
+});
 
 export const SocketProvider = ({ user, children }) => {
   useEffect(() => {
